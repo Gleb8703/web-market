@@ -12,6 +12,7 @@ class Product {
     void setName (std::string& newName);
     void setPrise(double newPrise);
     void setQuality(int newQuality);
+    double getPrise() const { return prise; }
     void printProductInfo();
 };
 Product addProduct();

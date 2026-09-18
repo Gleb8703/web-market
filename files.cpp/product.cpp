@@ -20,10 +20,10 @@
     }
     void Product::printProductInfo() {
         std::cout << name << prise << "byn" << '\n' << "Артикул: " << itemNo << std::endl;
-        // if (quality)
-        // std::cout << "В наличии: " << quality << std::endl;
-        // else
-        // std::cout << "Нет в наличии: " << std::endl;
+        if (quality)
+        std::cout << "В наличии: " << quality << std::endl;
+        else
+        std::cout << "Нет в наличии: " << std::endl;
     }
     Product addProduct() {
     unsigned int itemNo;
