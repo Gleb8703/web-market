@@ -7,7 +7,7 @@ class Product {
     unsigned int quality;
     public:
     Product();
-    Product (unsigned int newItemNo, const std::string& newName, double newPrise, unsigned int newQuality);
+    Product (int newItemNo, const std::string& newName, double newPrise, int newQuality);
     void setItemNo(unsigned int newItemNo);
     void setName (std::string& newName);
     void setPrise(double newPrise);
@@ -15,5 +15,8 @@ class Product {
     double getPrise() const { return prise; }
     void printProductInfo() const;
     void changeProduct();
+    int getQuality() const { return quality; } 
+    std::string getName() const { return name; }
+    int getItemNo() const { return itemNo; }
 };
 Product addProduct();
