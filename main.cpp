@@ -21,7 +21,6 @@ void menu() {
     std::cout << "6.Заказать товар из корзины\n";
 }
 
-// Выносим логику в отдельные функции, чтобы снизить сложность main
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
     if (products.empty()) {
         std::cout << "Нет товаров\n";
@@ -72,7 +71,7 @@ void printCart(const Cart& cart) {
     }
 }
 
-void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
+void makeOrderMenu(const Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
     if (cart.size() == 0) {
         std::cout << "Корзина пуста\n";
         return;
@@ -110,6 +109,11 @@ int main() {
     std::vector<std::unique_ptr<Product>> products;
     std::vector<std::unique_ptr<Product>> orders;
     Cart cart;
+
+    products.push_back(std::make_unique<Product>(2345, "Копилка", 40.0, 100));
+    products.push_back(std::make_unique<Product>(7654, "Подставка", 80.0, 50));
+    products.push_back(std::make_unique<Product>(9876, "Куртка", 200.0, 20));
+
     int choise = 0;
 
     do {

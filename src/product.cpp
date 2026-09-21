@@ -1,19 +1,19 @@
 #include <iostream>
 #include "product.h"
 #include <string>
+#include <string_view>
 #include "input.h"
 
-Product::Product(int newItemNo, const std::string& newName, double newPrise, int newQuality)
+Product::Product(int newItemNo, std::string_view newName, double newPrise, int newQuality)
     : itemNo(newItemNo), name(newName), prise(newPrise), quality(newQuality) {}
 
 void Product::setItemNo(unsigned int newItemNo) {
     itemNo = newItemNo;
 }
 
-void Product::setName(const std::string& newName) { // const ссылка
+void Product::setName(std::string_view newName) {
     name = newName;
 }
-
 void Product::setPrise(double newPrise) {
     prise = newPrise;
 }

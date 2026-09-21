@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <string_view>
 
 class Product {
     unsigned int itemNo = 0;    
@@ -11,10 +12,10 @@ class Product {
     unsigned int quality = 0;
 public:
     Product() = default;
-    Product(int newItemNo, const std::string& newName, double newPrise, int newQuality);
+    Product(int newItemNo, std::string_view newName, double newPrise, int newQuality);
     
     void setItemNo(unsigned int newItemNo);
-    void setName(const std::string& newName); 
+    void setName(std::string_view newName); 
     void setPrise(double newPrise);
     void setQuality(int newQuality);
     
