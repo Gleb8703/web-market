@@ -1,13 +1,14 @@
+#pragma once
 #include <iostream>
 #include <vector>
 
 class Product;
+
 class Cart {
     double totalPrise = 0;
     int totalQuality = 0;
-    std::vector <Product*> cartProducts;
-    public:
-    Cart(); 
+    std::vector<Product*> cartProducts;
+public:
     void delProductFromCart(std::size_t index);
     void addProductToCart(Product* product);
     void clearAll();
