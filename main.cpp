@@ -10,6 +10,7 @@
 
 void menu() {
     using namespace std;
+    cout << "----------------------------\n";
     cout << "0.Завершить программу\n";
     cout << "1.Добавить товар\n";
     cout << "2.Изменить товар\n";
@@ -30,19 +31,21 @@ int main() {
 #endif 
 
     int choise(0);
+    int index;
     std::vector <std::unique_ptr<Product>> products;
     std::vector <std::unique_ptr<Product>> orders;
     Cart cart;
     do
     {
         menu();
-        std::cin >> choise;
+        choise = readInt("Ваш выбор: ");
         switch (choise) {
         case 1:
             products.push_back(std::make_unique<Product>(addProduct()));
             break;
         case 2:
-            int index;
+            for (size_t i = 0; i < products.size(); i++)
+                products[i]->printProductInfo(i);
             index = readInt("Введите номер товара: ");
             products[index - 1]->changeProduct();
             break;
@@ -50,33 +53,35 @@ int main() {
             if (products.empty())
             std::cout << "Нет товаров" << std::endl;
             else
-            for (int i = 0; i < products.size(); i++)
-                products[i]->printProductInfo();
+            for (size_t i = 0; i < products.size(); i++)
+                products[i]->printProductInfo(i);
             break;
         case 4:
             if (products.empty()) { std::cout << "Нет товаров\n"; break; }
-            int index;
-            index = readInt("Введите артикул: ");
-            if (index < products.size())
+            else
+            for (size_t i = 0; i < products.size(); i++)
+                products[i]->printProductInfo(i);
+            index = readInt("Введите номер товара: ");
+            if (index - 1 < products.size())
                 cart.addProductToCart(products[index - 1].get());
             else
                 std::cout << "Неверный индекс\n";
             break;
         case 5:
-            for (std::size_t i = 0; i < cart.size(); ++i)
-                cart.getProduct(i)->printProductInfo();  
+            for (std::size_t i = 0; i < cart.size(); i++)
+                cart.getProduct(i)->printProductInfo(i);  
             break;
         case 6:
-            int index;
             int quality;
-            index = readInt("Введите артикул товара для заказа: ");
+            index = readInt("Введите номер товара для заказа: ");
             quality = readInt("Введите кол-во товара для заказа: ");
             if (quality > cart.getProduct(index - 1)->getQuality()) {
                 std::cout << "Недостаточно товаров для заказа" << std::endl;
             }
             else {
                 Product order {cart.getProduct(index - 1)->getItemNo(), cart.getProduct(index - 1)->getName(), cart.getProduct(index - 1)->getPrise(), quality};
-                orders.push_back(std::make_unique<Product>(addProduct()));
+                orders.push_back(std::make_unique<Product>(order));
+                cart.getProduct(index - 1)->setQuality(cart.getProduct(index - 1)->getQuality() - quality);
                 std::cout << "Товар успешно заказан" << std::endl;
             }
             break;

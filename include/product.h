@@ -1,4 +1,6 @@
 #include <iostream>
+#include <memory>
+#include <vector>
 
 class Product {
     unsigned int itemNo;
@@ -13,7 +15,8 @@ class Product {
     void setPrise(double newPrise);
     void setQuality(int newQuality);
     double getPrise() const { return prise; }
-    void printProductInfo() const;
+    void printProductInfo(size_t index) const;
+    void printAllProducts(std::vector <std::unique_ptr<Product>> products) const;
     void changeProduct();
     int getQuality() const { return quality; } 
     std::string getName() const { return name; }
