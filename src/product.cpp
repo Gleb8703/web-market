@@ -25,7 +25,6 @@ void Product::setQuality(int newQuality) {
 void Product::printProductInfo(size_t index) const {
     std::cout << "---------------------------" << std::endl;
     std::cout << index + 1 << ": " << name << ' ' << prise << " byn" << '\n' << "Артикул: " << itemNo << std::endl;
-    // Добавлены фигурные скобки
     if (quality) {
         std::cout << "В наличии: " << quality << std::endl;
     } else {
@@ -43,7 +42,6 @@ Product addProduct() {
 }
 
 void Product::changeProduct() {
-    // Убрано затенение полей. Сразу передаём значения в сеттеры.
     setItemNo(readInt("Введите артикул: "));
     setName(readString("Введите имя: "));
     setPrise(readDouble("Введите стоимость: "));

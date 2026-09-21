@@ -7,7 +7,7 @@
 #include "input.h"
 
 #ifdef _WIN32
-#include <windows.h> // Исправлен регистр и перемещено наверх
+#include <windows.h> 
 #endif
 
 void menu() {
@@ -88,7 +88,6 @@ void makeOrderMenu(const Cart& cart, std::vector<std::unique_ptr<Product>>& orde
     if (quality > cartProduct->getQuality()) {
         std::cout << "Недостаточно товаров для заказа\n";
     } else {
-        // Убрали временную переменную order, создаём сразу в make_unique
         orders.push_back(std::make_unique<Product>(
             cartProduct->getItemNo(),
             cartProduct->getName(),
@@ -142,7 +141,7 @@ int main() {
         case 6:
             makeOrderMenu(cart, orders);
             break;
-        default: // Добавлен default
+        default:
             std::cout << "Неверный пункт меню\n";
             break;
         }
