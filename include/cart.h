@@ -5,8 +5,8 @@
 class Product;
 
 class Cart {
-    double totalPrise = 0;
-    int totalQuality = 0;
+    double totalPrice = 0;
+    int totalQuantity = 0;
     std::vector<Product*> cartProducts;
 public:
     void delProductFromCart(std::size_t index);

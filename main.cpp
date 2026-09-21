@@ -65,13 +65,13 @@ void printCart(const Cart& cart) {
     if (cart.size() == 0) {
         std::cout << "Корзина пуста\n";
         return;
-    }
+    } 
     for (std::size_t i = 0; i < cart.size(); ++i) {
         cart.getProduct(i)->printProductInfo(i);
     }
 }
 
-void makeOrderMenu(const Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
+void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
     if (cart.size() == 0) {
         std::cout << "Корзина пуста\n";
         return;
@@ -82,19 +82,20 @@ void makeOrderMenu(const Cart& cart, std::vector<std::unique_ptr<Product>>& orde
         std::cout << "Неверный индекс\n";
         return;
     }
-    int quality = readInt("Введите кол-во товара для заказа: ");
+    int quantity = readInt("Введите кол-во товара для заказа: ");
     Product* cartProduct = cart.getProduct(index - 1);
 
-    if (quality > cartProduct->getQuality()) {
+    if (quantity > cartProduct->getQuantity()) {
         std::cout << "Недостаточно товаров для заказа\n";
     } else {
         orders.push_back(std::make_unique<Product>(
             cartProduct->getItemNo(),
             cartProduct->getName(),
-            cartProduct->getPrise(),
-            quality
+            cartProduct->getPrice(),
+            quantity
         ));
-        cartProduct->setQuality(cartProduct->getQuality() - quality);
+        cartProduct->setQuantity(cartProduct->getQuantity() - quantity);
+        cart.delProductFromCart(index - 1);
         std::cout << "Товар успешно заказан\n";
     }
 }
