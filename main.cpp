@@ -2,9 +2,9 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "cart.h"
-#include "product.h"
-#include "input.h"
+#include "include/cart.h"
+#include "include/product.h"
+#include "include/input.h"
 
 #ifdef _WIN32
 #include <Windows.h>
