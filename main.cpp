@@ -33,7 +33,12 @@ void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
 }
 
 void addProductMenu(std::vector<std::unique_ptr<Product>>& products) {
-    products.push_back(std::make_unique<Product>(addProduct()));
+    Product temp;
+    do 
+    {
+        temp = addProduct();
+    } while (!checkItemNo(products, temp));
+    products.push_back(std::make_unique<Product>(temp));
 }
 
 void changeProductMenu(std::vector<std::unique_ptr<Product>>& products) {

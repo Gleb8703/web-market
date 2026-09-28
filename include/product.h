@@ -26,7 +26,19 @@ public:
     int getQuantity() const { return quantity; } 
     std::string getName() const { return name; }
     int getItemNo() const { return itemNo; }
+
     friend std::ostream& operator<<(std::ostream& cout, const Product& product);
+
+    bool operator==(const Product& product) const;
+    bool operator!=(const Product& product) const;
+    bool operator==(int itemNo) const;
+    bool operator!=(int itemNo) const;
+    bool operator<(const Product& product) const;
+    bool operator>(const Product& product) const;
+    bool operator<=(const Product& product) const;
+    bool operator>=(const Product& product) const;
 };
 
 Product addProduct();
+bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, Product& product);
+Product* checkItemNo(std::vector<std::unique_ptr<Product>>& products, int itemNo);

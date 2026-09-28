@@ -57,3 +57,52 @@ std::ostream& operator<<(std::ostream& cout, const Product& product) {
     }
     return cout;
 }
+
+bool Product::operator==(const Product& other) const {
+    return itemNo == other.itemNo;
+}
+
+bool Product::operator!=(const Product& other) const {
+    return !(*this == other);
+}
+
+bool Product::operator<(const Product& other) const {
+    return price < other.price;
+}
+
+bool Product::operator>(const Product& other) const {
+    return other < *this;
+}
+
+bool Product::operator<=(const Product& other) const {
+    return !(other < *this);
+}
+
+bool Product::operator>=(const Product& other) const {
+    return !(*this < other);
+}
+bool Product::operator==(int itemNo) const {
+    return this->itemNo == itemNo;
+}
+bool Product::operator==(int itemNo) const {
+    return !(*this == itemNo);
+}
+bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, Product& product) {
+    for (size_t i = 0; i < products.size(); i++) {
+        if (*products[i] == product) {
+            std::cout << "Товар с таким артикулом уже есть" << std::endl;
+            return false; 
+        }
+    }
+    return true;
+}
+Product* checkItemNo(std::vector<std::unique_ptr<Product>>& products, int itemNo) {
+    for (size_t i = 0; i < products.size(); i++) {
+        if (*products[i] == itemNo) {
+            std::cout << "Товар с таким артикулом уже есть" << std::endl;
+            return products[i].get(); 
+        }
+    }
+    return nullptr;
+}
+
