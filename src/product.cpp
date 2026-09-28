@@ -47,3 +47,13 @@ void Product::changeProduct() {
     setPrice(readDouble("Введите стоимость: "));
     setQuantity(readInt("Введите кол-во: "));
 }
+
+std::ostream& operator<<(std::ostream& cout, const Product& product) {
+    cout << product.name << ' ' << product.price << " byn" << '\n' << "Артикул: " << product.itemNo << '\n';
+    if (product.quantity) {
+        cout << "В наличии: " << product.quantity;
+    } else {
+        cout << "Нет в наличии: " << '\n';
+    }
+    return cout;
+}

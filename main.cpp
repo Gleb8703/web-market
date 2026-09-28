@@ -27,7 +27,8 @@ void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
         return;
     }
     for (size_t i = 0; i < products.size(); ++i) {
-        products[i]->printProductInfo(i);
+        std::cout << "---------------------" << '\n' << i + 1 << ": ";
+        std::cout << *products[i] << '\n';
     }
 }
 
@@ -67,15 +68,12 @@ void printCart(const Cart& cart) {
         return;
     } 
     for (std::size_t i = 0; i < cart.size(); ++i) {
-        cart.getProduct(i)->printProductInfo(i);
+        std::cout << "---------------------" << '\n' << i + 1 << ": ";
+        std::cout << *cart.getProduct(i) << '\n';
     }
 }
 
 void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
-    if (cart.size() == 0) {
-        std::cout << "Корзина пуста\n";
-        return;
-    }
     printCart(cart);
     int index = readInt("Введите номер товара для заказа: ");
     if (index <= 0 || index > static_cast<int>(cart.size())) {

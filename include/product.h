@@ -26,6 +26,7 @@ public:
     int getQuantity() const { return quantity; } 
     std::string getName() const { return name; }
     int getItemNo() const { return itemNo; }
+    friend std::ostream& operator<<(std::ostream& cout, const Product& product);
 };
 
 Product addProduct();
