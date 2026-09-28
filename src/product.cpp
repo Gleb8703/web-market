@@ -57,6 +57,13 @@ std::ostream& operator<<(std::ostream& cout, const Product& product) {
     }
     return cout;
 }
+std::istream& operator>>(std::istream& is, Product& product) {
+    product.itemNo  = readInt("Введите артикул: ");
+    product.name    = readString("Введите имя: ");
+    product.price   = readDouble("Введите стоимость: ");
+    product.quantity = readInt("Введите кол-во: ");
+    return is;
+}
 
 bool Product::operator==(const Product& other) const {
     return itemNo == other.itemNo;
@@ -84,7 +91,7 @@ bool Product::operator>=(const Product& other) const {
 bool Product::operator==(int itemNo) const {
     return this->itemNo == itemNo;
 }
-bool Product::operator==(int itemNo) const {
+bool Product::operator!=(int itemNo) const {
     return !(*this == itemNo);
 }
 bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, Product& product) {
@@ -104,5 +111,13 @@ Product* checkItemNo(std::vector<std::unique_ptr<Product>>& products, int itemNo
         }
     }
     return nullptr;
+}
+
+bool Product::operator<(int quantity) const {
+    return this->quantity < quantity;
+}
+
+bool Product::operator>(int quantity) const {
+    return !(this->quantity < quantity);
 }
 

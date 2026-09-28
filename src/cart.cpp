@@ -2,6 +2,7 @@
 #include <vector>
 #include "cart.h"
 #include "product.h"
+#include <algorithm>
 
 void Cart::addProductToCart(Product* product) {
     cartProducts.push_back(product);
@@ -29,4 +30,32 @@ Product* Cart::getProduct(std::size_t index) const {
         return nullptr;
     }
     return cartProducts[index];
+}
+Cart& Cart::operator+=(Product* product) {
+    if (!product) return *this;
+    for (Product* p : cartProducts) {
+        if (*p == *product) {
+            std::cout << "Товар уже в корзине\n";
+            return *this;
+        }
+    }
+
+    cartProducts.push_back(product);
+    totalQuantity += product->getQuantity();
+    totalPrice += product->getPrice();
+    return *this;
+}
+Cart& Cart::operator-=(Product* product) {
+    if (!product) return *this;
+
+    auto it = std::find(cartProducts.begin(), cartProducts.end(), product);
+    if (it == cartProducts.end()) {
+        std::cout << "Товара нет в корзине\n";
+        return *this;
+    }
+
+    totalQuantity -= (*it)->getQuantity();
+    totalPrice -= (*it)->getPrice();
+    cartProducts.erase(it);
+    return *this;
 }

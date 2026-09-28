@@ -28,6 +28,7 @@ public:
     int getItemNo() const { return itemNo; }
 
     friend std::ostream& operator<<(std::ostream& cout, const Product& product);
+    friend std::istream& operator>>(std::istream& is, Product& product);
 
     bool operator==(const Product& product) const;
     bool operator!=(const Product& product) const;
@@ -37,6 +38,8 @@ public:
     bool operator>(const Product& product) const;
     bool operator<=(const Product& product) const;
     bool operator>=(const Product& product) const;
+    bool Product::operator<(int quantity) const;
+    bool Product::operator>(int quantity) const;
 };
 
 Product addProduct();

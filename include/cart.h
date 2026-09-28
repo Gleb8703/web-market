@@ -14,4 +14,6 @@ public:
     void clearAll();
     Product* getProduct(std::size_t index) const;
     std::size_t size() const { return cartProducts.size(); }
+    Cart& operator+=(Product* product);   
+    Cart& operator-=(Product* product);
 };
