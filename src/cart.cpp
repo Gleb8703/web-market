@@ -33,7 +33,7 @@ Product* Cart::getProduct(std::size_t index) const {
 }
 Cart& Cart::operator+=(Product* product) {
     if (!product) return *this;
-    for (Product* p : cartProducts) {
+    for (const Product* p : cartProducts) {
         if (*p == *product) {
             std::cout << "Товар уже в корзине\n";
             return *this;

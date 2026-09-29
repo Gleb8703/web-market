@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 #include <string_view>
- friend std::ostream& operator<<(std::ostream& cout, const Product& product);
-    friend std::istream& operator>>(std::istream& is, Product& product);
 
 class Product {
     unsigned int itemNo = 0;    
@@ -29,10 +27,25 @@ public:
     std::string getName() const { return name; }
     int getItemNo() const { return itemNo; }
 
-    friend std::ostream& operator<<(std::ostream& cout, const Product& product);
-    friend std::istream& operator>>(std::istream& is, Product& product);
+    friend std::ostream& operator<<(std::ostream& cout, const Product& product) {
+        cout << product.name << ' ' << product.price << " byn" << '\n' << "Артикул: " << product.itemNo << '\n';
+        if (product.quantity) {
+            cout << "В наличии: " << product.quantity;
+        } else {
+            cout << "Нет в наличии: " << '\n';
+        }
+        return cout;
+    };
+    friend std::istream& operator>>(std::istream& is, Product& product) {
+        product.itemNo  = readInt("Введите артикул: ");
+        product.name    = readString("Введите имя: ");
+        product.price   = readDouble("Введите стоимость: ");
+        product.quantity = readInt("Введите кол-во: ");
+        return is;
+    };
 
     bool operator==(const Product& product) const;
+
     bool operator==(int itemNo) const;
     bool operator!=(int itemNo) const;
     bool operator<(const Product& product) const;

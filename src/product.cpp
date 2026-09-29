@@ -48,29 +48,25 @@ void Product::changeProduct() {
     setQuantity(readInt("Введите кол-во: "));
 }
 
-std::ostream& operator<<(std::ostream& cout, const Product& product) {
-    cout << product.name << ' ' << product.price << " byn" << '\n' << "Артикул: " << product.itemNo << '\n';
-    if (product.quantity) {
-        cout << "В наличии: " << product.quantity;
-    } else {
-        cout << "Нет в наличии: " << '\n';
-    }
-    return cout;
-}
-std::istream& operator>>(std::istream& is, Product& product) {
-    product.itemNo  = readInt("Введите артикул: ");
-    product.name    = readString("Введите имя: ");
-    product.price   = readDouble("Введите стоимость: ");
-    product.quantity = readInt("Введите кол-во: ");
-    return is;
-}
+// std::ostream& operator<<(std::ostream& cout, const Product& product) {
+//     cout << product.name << ' ' << product.price << " byn" << '\n' << "Артикул: " << product.itemNo << '\n';
+//     if (product.quantity) {
+//         cout << "В наличии: " << product.quantity;
+//     } else {
+//         cout << "Нет в наличии: " << '\n';
+//     }
+//     return cout;
+// }
+// std::istream& operator>>(std::istream& is, Product& product) {
+//     product.itemNo  = readInt("Введите артикул: ");
+//     product.name    = readString("Введите имя: ");
+//     product.price   = readDouble("Введите стоимость: ");
+//     product.quantity = readInt("Введите кол-во: ");
+//     return is;
+// }
 
 bool Product::operator==(const Product& other) const {
     return itemNo == other.itemNo;
-}
-
-bool Product::operator!=(const Product& other) const {
-    return !(*this == other);
 }
 
 bool Product::operator<(const Product& other) const {
@@ -88,15 +84,15 @@ bool Product::operator<=(const Product& other) const {
 bool Product::operator>=(const Product& other) const {
     return !(*this < other);
 }
-bool Product::operator==(int itemNo) const {
-    return this->itemNo == itemNo;
+bool Product::operator==(int othetItemNo) const {
+    return this->itemNo == othetItemNo;
 }
-bool Product::operator!=(int itemNo) const {
-    return !(*this == itemNo);
+bool Product::operator!=(int othetItemNo) const {
+    return !(*this == othetItemNo);
 }
-bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, Product& product) {
-    for (size_t i = 0; i < products.size(); i++) {
-        if (*products[i] == product) {
+bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, const Product& product) {
+    for (const auto& productTemp : products) {
+        if (*productTemp == product) {
             std::cout << "Товар с таким артикулом уже есть" << std::endl;
             return false; 
         }
@@ -104,20 +100,20 @@ bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, Product& produ
     return true;
 }
 Product* checkItemNo(std::vector<std::unique_ptr<Product>>& products, int itemNo) {
-    for (size_t i = 0; i < products.size(); i++) {
-        if (*products[i] == itemNo) {
+    for (const auto& product : products) {
+        if (*product == itemNo) {
             std::cout << "Товар с таким артикулом уже есть" << std::endl;
-            return products[i].get(); 
+            return product.get(); 
         }
     }
     return nullptr;
 }
 
-bool Product::operator<(int quantity) const {
-    return this->quantity < quantity;
+bool Product::operator<(int otherQuantity) const {
+    return this->quantity < otherQuantity;
 }
 
-bool Product::operator>(int quantity) const {
-    return !(this->quantity < quantity);
+bool Product::operator>(int otherQuantity) const {
+    return !(this->quantity < otherQuantity);
 }
 

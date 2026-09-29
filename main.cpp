@@ -79,7 +79,7 @@ void printCart(const Cart& cart) {
     }
 }
 
-void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders, const std::vector<std::unique_ptr<Product>>& products) {
+void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
     printCart(cart);
     int index = readInt("Введите номер товара для заказа: ");
     if (index <= 0 || index > static_cast<int>(cart.size())) {
@@ -104,15 +104,12 @@ void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders, co
     }
 }
 
-void findProductMenu(std::vector<std::unique_ptr<Product>>& products, Cart cart) {
+void findProductMenu(std::vector<std::unique_ptr<Product>>& products) {
     int itemNo = readInt("Введите артикул товара: ");
     for (size_t i = 0; i < products.size(); i++) {
         if (*products[i] == itemNo) {
             std::cout << *products[i] << std::endl;
             break;
-        } else {
-            std::cout << "Товара с таким артикулом нет" << std::endl;
-            return;
         }
     }
 }
@@ -157,10 +154,10 @@ int main() {
             printCart(cart);
             break;
         case 6:
-            makeOrderMenu(cart, orders, products);
+            makeOrderMenu(cart, orders);
             break;
         case 7:
-            findProductMenu(products, cart);
+            findProductMenu(products);
             break;
         default:
             std::cout << "Неверный пункт меню\n";
