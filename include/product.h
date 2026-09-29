@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <string_view>
+ friend std::ostream& operator<<(std::ostream& cout, const Product& product);
+    friend std::istream& operator>>(std::istream& is, Product& product);
 
 class Product {
     unsigned int itemNo = 0;    
@@ -31,7 +33,6 @@ public:
     friend std::istream& operator>>(std::istream& is, Product& product);
 
     bool operator==(const Product& product) const;
-    bool operator!=(const Product& product) const;
     bool operator==(int itemNo) const;
     bool operator!=(int itemNo) const;
     bool operator<(const Product& product) const;
