@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <string_view>
+#include "input.h"
 
 class Product {
     unsigned int itemNo = 0;    
@@ -52,10 +53,10 @@ public:
     bool operator>(const Product& product) const;
     bool operator<=(const Product& product) const;
     bool operator>=(const Product& product) const;
-    bool Product::operator<(int quantity) const;
-    bool Product::operator>(int quantity) const;
+    bool operator<(int quantity) const;
+    bool operator>(int quantity) const;
 };
 
 Product addProduct();
-bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, Product& product);
+bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, const Product& product);
 Product* checkItemNo(std::vector<std::unique_ptr<Product>>& products, int itemNo);

@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <algorithm>
 #include "include/cart.h"
 #include "include/product.h"
 #include "include/input.h"
@@ -20,6 +21,7 @@ void menu() {
     std::cout << "5.Просмотреть корзину\n";
     std::cout << "6.Заказать товар из корзины\n";
     std::cout << "7.Найти товар в каталоге\n";
+    std::cout << "8.Отсортировать товары по цене\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -114,6 +116,21 @@ void findProductMenu(std::vector<std::unique_ptr<Product>>& products) {
     }
 }
 
+void sortProductsByPrice(std::vector<std::unique_ptr<Product>>& products) {
+    if (products.empty()) {
+        std::cout << "Нет товаров\n";
+        return;
+    }
+
+    std::sort(products.begin(), products.end(),
+        [](const std::unique_ptr<Product>& a, const std::unique_ptr<Product>& b) {
+            return *a < *b;
+        });
+
+    std::cout << "Товары отсортированы по цене:\n";
+    printAllProducts(products);
+}
+
 int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -158,6 +175,9 @@ int main() {
             break;
         case 7:
             findProductMenu(products);
+            break;
+        case 8:
+            sortProductsByPrice(products);
             break;
         default:
             std::cout << "Неверный пункт меню\n";

@@ -84,11 +84,11 @@ bool Product::operator<=(const Product& other) const {
 bool Product::operator>=(const Product& other) const {
     return !(*this < other);
 }
-bool Product::operator==(int othetItemNo) const {
-    return this->itemNo == othetItemNo;
+bool Product::operator==(int otherItemNo) const {
+    return this->itemNo == otherItemNo;
 }
-bool Product::operator!=(int othetItemNo) const {
-    return !(*this == othetItemNo);
+bool Product::operator!=(int otherItemNo) const {
+    return !(*this == otherItemNo);
 }
 bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, const Product& product) {
     for (const auto& productTemp : products) {
