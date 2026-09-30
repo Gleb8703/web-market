@@ -90,7 +90,7 @@ bool Product::operator==(int otherItemNo) const {
 bool Product::operator!=(int otherItemNo) const {
     return !(*this == otherItemNo);
 }
-bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, const Product& product) {
+bool checkItemNo(const std::vector<std::unique_ptr<Product>>& products, const Product& product) {
     for (const auto& productTemp : products) {
         if (*productTemp == product) {
             std::cout << "Товар с таким артикулом уже есть" << std::endl;
@@ -99,7 +99,7 @@ bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, const Product&
     }
     return true;
 }
-Product* checkItemNo(std::vector<std::unique_ptr<Product>>& products, int itemNo) {
+Product* checkItemNo(const std::vector<std::unique_ptr<Product>>& products, int itemNo) {
     for (const auto& product : products) {
         if (*product == itemNo) {
             std::cout << "Товар с таким артикулом уже есть" << std::endl;

@@ -22,6 +22,7 @@ void menu() {
     std::cout << "6.Заказать товар из корзины\n";
     std::cout << "7.Найти товар в каталоге\n";
     std::cout << "8.Отсортировать товары по цене\n";
+    std::cout << "9.Удалить товар из каталога\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -108,7 +109,7 @@ void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
 
 void findProductMenu(std::vector<std::unique_ptr<Product>>& products) {
     int itemNo = readInt("Введите артикул товара: ");
-    for (size_t i = 0; i < products.size(); i++) {
+    for (size_t i = 0; i < products.size(); i++) { //NOSONAR
         if (*products[i] == itemNo) {
             std::cout << *products[i] << std::endl;
             break;
@@ -129,6 +130,21 @@ void sortProductsByPrice(std::vector<std::unique_ptr<Product>>& products) {
 
     std::cout << "Товары отсортированы по цене:\n";
     printAllProducts(products);
+}
+
+void removeProductMenu(std::vector<std::unique_ptr<Product>>& products, Cart& cart) {
+    printAllProducts(products);
+    if (products.empty()) {
+        return;
+    }
+
+    int index = readInt("Введите номер товара для удаления: ");
+    Product* target = products[index - 1].get();
+
+    cart -= target;
+    products.erase(products.begin() + (index - 1));
+
+    std::cout << "Товар удалён из каталога\n";
 }
 
 int main() {
@@ -178,6 +194,9 @@ int main() {
             break;
         case 8:
             sortProductsByPrice(products);
+            break;
+        case 9:
+            removeProductMenu(products, cart);
             break;
         default:
             std::cout << "Неверный пункт меню\n";

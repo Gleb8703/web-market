@@ -58,5 +58,5 @@ public:
 };
 
 Product addProduct();
-bool checkItemNo(std::vector<std::unique_ptr<Product>>& products, const Product& product);
-Product* checkItemNo(std::vector<std::unique_ptr<Product>>& products, int itemNo);
+bool checkItemNo(const std::vector<std::unique_ptr<Product>>& products, const Product& product);
+Product* checkItemNo(const std::vector<std::unique_ptr<Product>>& products, int itemNo);
