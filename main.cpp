@@ -66,6 +66,7 @@ void addToCartMenu(const std::vector<std::unique_ptr<Product>>& products, Cart& 
     int index = readInt("Введите номер товара: ");
     if (index > 0 && index <= static_cast<int>(products.size())) {
         cart += products[index - 1].get();
+        std::cout << "Выбранный товар успешно добавлен" << std::endl; 
     } else {
         std::cout << "Неверный индекс\n";
     }

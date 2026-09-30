@@ -50,7 +50,6 @@ Cart& Cart::operator-=(Product* product) {
 
     auto it = std::find(cartProducts.begin(), cartProducts.end(), product);
     if (it == cartProducts.end()) {
-        std::cout << "Товара нет в корзине\n";
         return *this;
     }
 
