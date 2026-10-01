@@ -49,7 +49,7 @@ public:
 
     bool operator==(int itemNo) const;
     bool operator!=(int itemNo) const;
-    bool operator<(const Product& product) const;
+    bool operator<(const Product& product) const; //NOSONAR
     bool operator>(const Product& product) const;
     bool operator<=(const Product& product) const;
     bool operator>=(const Product& product) const;
