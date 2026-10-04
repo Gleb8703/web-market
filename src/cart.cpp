@@ -4,12 +4,12 @@
 #include "product.h"
 #include <algorithm>
 
-void Cart::addProductToCart(Product* product) {
-    cartProducts.push_back(product);
-    totalQuantity++;
-    totalPrice += product->getPrice();
+void Cart::printCart() const {
+    std::cout << "Стоимость корзины: " << totalPrice << "Кол-во товаров: " << cartProducts.size() << std::endl;
+    for (const auto& p : cartProducts) {
+        std::cout << p;
+    }
 }
-
 void Cart::delProductFromCart(std::size_t index) {
     if (index >= cartProducts.size()) {
         std::cout << "Неверный индекс\n";

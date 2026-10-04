@@ -6,6 +6,7 @@
 #include "include/cart.h"
 #include "include/product.h"
 #include "include/input.h"
+#include "include/catalog.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -36,13 +37,10 @@ void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
     }
 }
 
-void addProductMenu(std::vector<std::unique_ptr<Product>>& products) {
+void addProductMenu(Catalog& catalog) {
     Product temp;
-    do 
-    {
-        std::cin >> temp;
-    } while (!checkItemNo(products, temp));
-    products.push_back(std::make_unique<Product>(temp));
+    std::cin >> temp;
+    catalog += temp;
 }
 
 void changeProductMenu(std::vector<std::unique_ptr<Product>>& products) {
@@ -58,14 +56,14 @@ void changeProductMenu(std::vector<std::unique_ptr<Product>>& products) {
     }
 }
 
-void addToCartMenu(const std::vector<std::unique_ptr<Product>>& products, Cart& cart) {
-    printAllProducts(products);
-    if (products.empty()) {
+void addToCartMenu(Catalog catalog, Cart& cart) {
+    catalog.printCatalog();
+    if (catalog.size() == 0) {
         return;
     }
     int index = readInt("Введите номер товара: ");
-    if (index > 0 && index <= static_cast<int>(products.size())) {
-        cart += products[index - 1].get();
+    if (index > 0 && index <= static_cast<int>(catalog.size())) {
+        cart += catalog.getProduct(index - 1);
         std::cout << "Выбранный товар успешно добавлен" << std::endl; 
     } else {
         std::cout << "Неверный индекс\n";
@@ -107,44 +105,15 @@ void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
         std::cout << "Товар успешно заказан\n";
     }
 }
-
-void findProductMenu(std::vector<std::unique_ptr<Product>>& products) {
-    int itemNo = readInt("Введите артикул товара: ");
-    for (size_t i = 0; i < products.size(); i++) { //NOSONAR
-        if (*products[i] == itemNo) {
-            std::cout << *products[i] << std::endl;
-            break;
-        }
-    }
-}
-
-void sortProductsByPrice(std::vector<std::unique_ptr<Product>>& products) {
-    if (products.empty()) {
-        std::cout << "Нет товаров\n";
+void removeProductMenu(Catalog catalog, Cart& cart) {
+    catalog.printCatalog();
+    if (catalog.size() == 0) {
         return;
     }
-
-    std::sort(products.begin(), products.end(),
-        [](const std::unique_ptr<Product>& a, const std::unique_ptr<Product>& b) {
-            return *a < *b;
-        });
-
-    std::cout << "Товары отсортированы по цене:\n";
-    printAllProducts(products);
-}
-
-void removeProductMenu(std::vector<std::unique_ptr<Product>>& products, Cart& cart) {
-    printAllProducts(products);
-    if (products.empty()) {
-        return;
-    }
-
     int index = readInt("Введите номер товара для удаления: ");
-    Product* target = products[index - 1].get();
-
+    Product* target = catalog.getProduct(index - 1); 
+    catalog -= target->getItemNo();
     cart -= target;
-    products.erase(products.begin() + (index - 1));
-
     std::cout << "Товар удалён из каталога\n";
 }
 
@@ -153,13 +122,13 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 #endif
-
+    Catalog catalog;
     std::vector<std::unique_ptr<Product>> products;
     std::vector<std::unique_ptr<Product>> orders;
     Cart cart;
 
     products.push_back(std::make_unique<Product>(2345, "Копилка", 40.0, 100));
-    products.push_back(std::make_unique<Product>(7654, "Подставка", 80.0, 50));
+    products.push_back(std::make_unique<Product>(7654, "Подставка", 32.0, 50));
     products.push_back(std::make_unique<Product>(9876, "Куртка", 200.0, 20));
 
     int choise = 0;
@@ -173,16 +142,16 @@ int main() {
             std::cout << "Выход...\n";
             break;
         case 1:
-            addProductMenu(products);
+            addProductMenu(catalog);
             break;
         case 2:
             changeProductMenu(products);
             break;
         case 3:
-            printAllProducts(products);
+            catalog.printCatalog();
             break;
         case 4:
-            addToCartMenu(products, cart);
+            addToCartMenu(catalog, cart);
             break;
         case 5:
             printCart(cart);
@@ -191,13 +160,14 @@ int main() {
             makeOrderMenu(cart, orders);
             break;
         case 7:
-            findProductMenu(products);
+            std::cout << catalog.findProduct(readInt("Введите артикул"));
             break;
         case 8:
-            sortProductsByPrice(products);
+            catalog.sortCatalogByPrice();
+            catalog.printCatalog();
             break;
         case 9:
-            removeProductMenu(products, cart);
+            removeProductMenu(catalog, cart);
             break;
         default:
             std::cout << "Неверный пункт меню\n";
