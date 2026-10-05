@@ -7,6 +7,9 @@
 #include "include/product.h"
 #include "include/input.h"
 #include "include/catalog.h"
+#include "include/bookProduct.h"
+#include "include/clothingProduct.h"
+#include "include/foodProduct.h"
 
 #ifdef _WIN32
 #include <Windows.h>
