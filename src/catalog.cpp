@@ -8,40 +8,55 @@
 #include "input.h"
 #include "catalog.h"
 
-Catalog& Catalog::operator+=(const Product& newProduct) {
+Catalog& Catalog::operator+=(std::unique_ptr<Product> product) {
+    if (!product) return *this;
     for (const auto& p : products) {
-        if (*p == newProduct) {
+        if (*p == product->getItemNo()) {
             std::cout << "Товар с таким артикулом уже есть\n";
             return *this;
         }
-        products.push_back(std::make_unique<Product>(newProduct));
-        return *this; 
     }
+    products.push_back(std::move(product));
+    return *this;
 }
 Catalog& Catalog::operator-=(int itemNo) {
     auto it = std::find_if(products.begin(), products.end(),
-        [itemNo](const std::unique_ptr<Product>& p) {
-            return *p == itemNo;
-        });
+        [itemNo](const std::unique_ptr<Product>& p) { return *p == itemNo; });
     if (it == products.end()) {
-        std::cout << "Товара с таким артикулом нет в каталоге\n";
+        std::cout << "Товара с таким артикулом нет\n";
         return *this;
     }
     products.erase(it);
     return *this;
 }
+
 void Catalog::printCatalog() const {
     for (const auto& p : products) {
-        std::cout << *p;
+        std::cout << "-----------------\n";
+        p->printInfo(); 
     }
 }
-const Product& Catalog::findProduct(int itemNo) const {
-    for (const auto& p : products) { //NOSONAR
+
+void Catalog::printTypes() const {
+    for (const auto& p : products) {
+        std::cout << p->getItemNo() << " — " << p->getType() << "\n"; 
+    }
+}
+
+void Catalog::printFinalPrices() const {
+    for (const auto& p : products) {
+        std::cout << p->getName()
+                  << ": базовая " << p->getPrice()
+                  << ", итоговая " << p->calculateFinalPrice() << "\n";  
+    }
+}
+Product* Catalog::findProduct(int itemNo) const {
+    for (const auto& p : products) {
         if (*p == itemNo) {
-            return *p;
-            break;
+            return p.get();
         }
     }
+    return nullptr;
 }
 void Catalog:: sortCatalogByPrice() {
     if (products.empty()) {

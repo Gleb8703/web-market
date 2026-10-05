@@ -16,8 +16,8 @@ void menu() {
     std::cout << "----------------------------\n";
     std::cout << "0.Завершить программу\n";
     std::cout << "1.Добавить товар\n";
-    std::cout << "2.Изменить товар\n";
-    std::cout << "3.Вывести товары на экран\n";
+    std::cout << "2.Вывести товары\n";
+    std::cout << "3.Показать типы товаров\n";
     std::cout << "4.Добавить товар в корзину\n";
     std::cout << "5.Просмотреть корзину\n";
     std::cout << "6.Заказать товар из корзины\n";
@@ -37,26 +37,18 @@ void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
     }
 }
 
-void addProductMenu(Catalog& catalog) {
-    Product temp;
-    std::cin >> temp;
-    catalog += temp;
-}
+void changeProductMenu(Catalog& catalog) {
+    catalog.printCatalog();
+    if (catalog.size() == 0) return;
 
-void changeProductMenu(std::vector<std::unique_ptr<Product>>& products) {
-    printAllProducts(products);
-    if (products.empty()) {
-        return;
-    }
     int index = readInt("Введите номер товара: ");
-    if (index > 0 && index <= static_cast<int>(products.size())) {
-            std::cin >> *products[index - 1];
-    } else {
-        std::cout << "Неверный индекс\n";
+    Product* p = catalog.getProduct(index - 1);
+    if (p) {
+        std::cin >> *p;
     }
 }
 
-void addToCartMenu(Catalog catalog, Cart& cart) {
+void addToCartMenu(Catalog& catalog, Cart& cart) {
     catalog.printCatalog();
     if (catalog.size() == 0) {
         return;
@@ -81,7 +73,7 @@ void printCart(const Cart& cart) {
     }
 }
 
-void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
+void makeOrderMenu(Cart& cart) {
     printCart(cart);
     int index = readInt("Введите номер товара для заказа: ");
     if (index <= 0 || index > static_cast<int>(cart.size())) {
@@ -94,18 +86,12 @@ void makeOrderMenu(Cart& cart, std::vector<std::unique_ptr<Product>>& orders) {
     if (*cartProduct < quantity) {
         std::cout << "Недостаточно товаров для заказа\n";
     } else {
-        orders.push_back(std::make_unique<Product>(
-            cartProduct->getItemNo(),
-            cartProduct->getName(),
-            cartProduct->getPrice(),
-            quantity
-        ));
         cartProduct->setQuantity(cartProduct->getQuantity() - quantity);
         cart -= cartProduct;
         std::cout << "Товар успешно заказан\n";
     }
 }
-void removeProductMenu(Catalog catalog, Cart& cart) {
+void removeProductMenu(Catalog& catalog, Cart& cart) {
     catalog.printCatalog();
     if (catalog.size() == 0) {
         return;
@@ -116,20 +102,52 @@ void removeProductMenu(Catalog catalog, Cart& cart) {
     cart -= target;
     std::cout << "Товар удалён из каталога\n";
 }
+std::unique_ptr<Product> createProductFromInput() {
 
+    int itemNo        = readInt("Артикул: ");
+    std::string name  = readString("Имя: ");
+    double price      = readDouble("Цена: ");
+    int quantity      = readInt("Кол-во: ");
+
+    std::cout << "1. Продукт\n"
+              << "2. Книга\n"
+              << "3. Одежда\n";
+    int type = readInt("Тип товара: ");
+
+    switch (type) {
+    case 1: {
+        int expiryDays = readInt("Срок годности (дней): ");
+        int refr       = readInt("Нужен холодильник (0/1): ");
+        return std::make_unique<FoodProduct>(itemNo, name, price, quantity, expiryDays, refr);
+    }
+    case 2: {
+        int pages          = readInt("Страниц: ");
+        std::string author = readString("Автор: ");
+        return std::make_unique<BookProduct>(itemNo, name, price, quantity, pages, author);
+    }
+    case 3: {
+        std::string size     = readString("Размер: ");
+        std::string material = readString("Материал: ");
+        return std::make_unique<ClothingProduct>(itemNo, name, price, quantity, size, material);
+    }
+    }
+    return nullptr;
+}
 int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 #endif
     Catalog catalog;
-    std::vector<std::unique_ptr<Product>> products;
     std::vector<std::unique_ptr<Product>> orders;
     Cart cart;
 
-    products.push_back(std::make_unique<Product>(2345, "Копилка", 40.0, 100));
-    products.push_back(std::make_unique<Product>(7654, "Подставка", 32.0, 50));
-    products.push_back(std::make_unique<Product>(9876, "Куртка", 200.0, 20));
+    catalog += std::make_unique<FoodProduct>(1001, "Молоко", 2.5, 50, 7, true);
+    catalog += std::make_unique<FoodProduct>(1002, "Хлеб", 1.8, 30, 2, false);
+    catalog += std::make_unique<BookProduct>(2001, "Война и мир", 50.0, 10, 1300, "Л. Толстой");
+    catalog += std::make_unique<BookProduct>(2002, "Преступление и наказание", 40.0, 15, 670, "Ф. Достоевский");
+    catalog += std::make_unique<ClothingProduct>(3001, "Футболка", 30.0, 100, "L", "хлопок");
+    catalog += std::make_unique<ClothingProduct>(3002, "Куртка", 200.0, 20, "M", "кожа");
 
     int choise = 0;
 
@@ -142,13 +160,13 @@ int main() {
             std::cout << "Выход...\n";
             break;
         case 1:
-            addProductMenu(catalog);
+            catalog += createProductFromInput();
             break;
         case 2:
-            changeProductMenu(products);
+            catalog.printCatalog();
             break;
         case 3:
-            catalog.printCatalog();
+            catalog.printTypes(); 
             break;
         case 4:
             addToCartMenu(catalog, cart);
@@ -157,7 +175,7 @@ int main() {
             printCart(cart);
             break;
         case 6:
-            makeOrderMenu(cart, orders);
+            makeOrderMenu(cart);
             break;
         case 7:
             std::cout << catalog.findProduct(readInt("Введите артикул"));

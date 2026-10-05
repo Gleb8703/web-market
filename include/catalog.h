@@ -11,11 +11,14 @@ class Product;
 class Catalog {
     std::vector<std::unique_ptr<Product>> products;
 public:
-    Catalog& operator+=(const Product& product); // добавление товара в каталог
-    Catalog& operator-=(int itemNo); // 
+    Catalog& operator+=(std::unique_ptr<Product> product);
+    Catalog& operator-=(int itemNo);
     void printCatalog() const;
-    const Product& findProduct(int itemNo) const;
-    void sortCatalogByPrice(); 
+    void printTypes() const;             
+    void printFinalPrices() const; 
+    void sortCatalogByPrice();
+    Product* findProduct(int itemNo) const;
     std::size_t size() const { return products.size(); }
+    bool empty() const { return products.empty(); }
     Product* getProduct(std::size_t index) const;
 };

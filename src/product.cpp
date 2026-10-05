@@ -22,23 +22,15 @@ void Product::setQuantity(int newQuantity) {
     quantity = newQuantity;
 }
 
-void Product::printProductInfo(size_t index) const {
+void Product::printInfo() const {
     std::cout << "---------------------------" << std::endl;
-    std::cout << index + 1 << ": " << name << ' ' << price << " byn" << '\n' << "Артикул: " << itemNo << std::endl;
+    //std::cout << index + 1 << ": " << name << ' ' << price << " byn" << '\n' << "Артикул: " << itemNo << std::endl;
+    std::cout << ": " << name << ' ' << price << " byn" << '\n' << "Артикул: " << itemNo << std::endl;
     if (quantity) {
         std::cout << "В наличии: " << quantity << std::endl;
     } else {
         std::cout << "Нет в наличии: " << std::endl;
     }
-}
-
-Product addProduct() {
-    int itemNo       = readInt("Введите артикул: ");
-    std::string name = readString("Введите имя: ");
-    double price     = readDouble("Введите стоимость: ");
-    int quantity      = readInt("Введите кол-во: ");
-
-    return Product(itemNo, name, price, quantity);
 }
 
 void Product::changeProduct() {
@@ -117,3 +109,78 @@ bool Product::operator>(int otherQuantity) const {
     return !(this->quantity < otherQuantity);
 }
 
+BookProduct::BookProduct(int newItemNo, std::string_view newName, double newPrise, int newQuantity, int newPages, std::string_view newAuthor) :
+Product(newItemNo, newName, newPrise, newQuantity), pages(newPages), author(newAuthor) {}
+void BookProduct::setPages(int newPages) {
+    pages = newPages;
+}
+void BookProduct::setAuthor(std::string_view newAuthor) {
+    author = newAuthor;
+}
+std::string BookProduct::getType() const {
+    return "Книга";
+}
+void BookProduct::printInfo() const {
+    Product::printInfo();  
+    std::cout << "Автор: " << author << "\n"
+              << "Страниц: " << pages << "\n";
+}
+double BookProduct::calculateFinalPrice() const {
+    if (pages > 500) {
+        return price * 0.9;
+    }
+    return price;
+}
+
+FoodProduct::FoodProduct(int newItemNo, std::string_view newName, double newPrice, int newQuantity,
+                         int newExpiryDays, bool newIsRefrigerated)
+    : Product(newItemNo, newName, newPrice, newQuantity),
+      expiryDays(newExpiryDays),
+      isRefrigerated(newIsRefrigerated) {}
+
+std::string FoodProduct::getType() const {
+    return "Продукт питания";
+}
+
+void FoodProduct::printInfo() const {
+    Product::printInfo();   // общая часть
+    std::cout << "Срок годности: " << expiryDays << " дней\n"
+              << "Хранение: " << getStorageInfo() << "\n";
+}
+
+double FoodProduct::calculateFinalPrice() const {
+    // Скидка 20% если срок годности меньше 3 дней
+    if (expiryDays < 3) {
+        return price * 0.8;
+    }
+    return price;
+}
+
+bool FoodProduct::isExpired(int daysPassed) const {
+    return daysPassed > expiryDays;
+}
+
+std::string FoodProduct::getStorageInfo() const {
+    return isRefrigerated ? "В холодильнике" : "При комнатной температуре";
+}
+ClothingProduct::ClothingProduct(int newItemNo, std::string_view newName, double newPrice, int newQuantity, std::string_view newSize, std::string_view newMaterial) 
+    : Product(newItemNo, newName, newPrice, newQuantity),
+    size(newSize),
+    material(newMaterial) {}
+
+std::string ClothingProduct::getType() const {
+    return "Одежда";
+}
+
+void ClothingProduct::printInfo() const {
+    Product::printInfo();
+    std::cout << "Размер: " << size << "\n"
+              << "Материал: " << material << "\n";
+}
+
+double ClothingProduct::calculateFinalPrice() const {
+    return price * 0.9;
+}
+std::string ClothingProduct::getSizeInfo() const {
+    return "Размер " + size + ", материал: " + material;
+}
