@@ -40,9 +40,9 @@ void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
     }
 }
 
-void changeProductMenu(Catalog& catalog) {
+void changeProductMenu(const Catalog& catalog) {
     catalog.printCatalog();
-    if (catalog.size() == 0) return;
+    if (catalog.empty()) return;
 
     int index = readInt("Введите номер товара: ");
     Product* p = catalog.getProduct(index - 1);
@@ -51,9 +51,9 @@ void changeProductMenu(Catalog& catalog) {
     }
 }
 
-void addToCartMenu(Catalog& catalog, Cart& cart) {
+void addToCartMenu(const Catalog& catalog, Cart& cart) {
     catalog.printCatalog();
-    if (catalog.size() == 0) {
+    if (catalog.empty()) {
         return;
     }
     int index = readInt("Введите номер товара: ");
@@ -96,7 +96,7 @@ void makeOrderMenu(Cart& cart) {
 }
 void removeProductMenu(Catalog& catalog, Cart& cart) {
     catalog.printCatalog();
-    if (catalog.size() == 0) {
+    if (catalog.empty()) {
         return;
     }
     int index = readInt("Введите номер товара для удаления: ");
@@ -115,9 +115,7 @@ std::unique_ptr<Product> createProductFromInput() {
     std::cout << "1. Продукт\n"
               << "2. Книга\n"
               << "3. Одежда\n";
-    int type = readInt("Тип товара: ");
-
-    switch (type) {
+    switch (int type = readInt("Тип товара: "); type) {
     case 1: {
         int expiryDays = readInt("Срок годности (дней): ");
         int refr       = readInt("Нужен холодильник (0/1): ");
@@ -133,6 +131,9 @@ std::unique_ptr<Product> createProductFromInput() {
         std::string material = readString("Материал: ");
         return std::make_unique<ClothingProduct>(itemNo, name, price, quantity, size, material);
     }
+    default:
+        std::cout << "Неверный пункт меню\n";
+        break;
     }
     return nullptr;
 }

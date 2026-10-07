@@ -27,7 +27,6 @@ void Product::setQuantity(int newQuantity) {
 
 void Product::printInfo() const {
     std::cout << "---------------------------" << std::endl;
-    //std::cout << index + 1 << ": " << name << ' ' << price << " byn" << '\n' << "Артикул: " << itemNo << std::endl;
     std::cout << ": " << name << ' ' << price << " byn" << '\n' << "Артикул: " << itemNo << std::endl;
     if (quantity) {
         std::cout << "В наличии: " << quantity << std::endl;
