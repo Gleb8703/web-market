@@ -18,9 +18,9 @@ void FoodProduct::printInfo() const {
 
 double FoodProduct::calculateFinalPrice() const {
     if (expiryDays < 3) {
-        return price * 0.8;
+        return getPrice() * 0.8;
     }
-    return price;
+    return getPrice();
 }
 
 bool FoodProduct::isExpired(int daysPassed) const {

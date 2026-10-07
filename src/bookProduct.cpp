@@ -18,7 +18,7 @@ void BookProduct::printInfo() const {
 }
 double BookProduct::calculateFinalPrice() const {
     if (pages > 500) {
-        return price * 0.9;
+        return getPrice() * 0.9;
     }
-    return price;
+    return getPrice();
 }

@@ -15,7 +15,7 @@ void ClothingProduct::printInfo() const {
 }
 
 double ClothingProduct::calculateFinalPrice() const {
-    return price * 0.9;
+    return getPrice() * 0.9;
 }
 std::string ClothingProduct::getSizeInfo() const {
     return "Размер " + size + ", материал: " + material;

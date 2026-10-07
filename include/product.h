@@ -7,7 +7,6 @@
 #include "input.h"
 
 class Product {
-protected:                                                                                                                                     //NOSONAR
     unsigned int itemNo = 0;    
     std::string name;
     double price = 0.0;
