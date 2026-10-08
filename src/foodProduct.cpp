@@ -1,4 +1,6 @@
 #include "foodProduct.h"
+#define DISCOUNT_COEFF 0.8
+#define DISCOUNT_EXPIRY_DAYS 3
 
 FoodProduct::FoodProduct(int newItemNo, std::string_view newName, double newPrice, int newQuantity,
                          int newExpiryDays, bool newIsRefrigerated)
@@ -17,8 +19,8 @@ void FoodProduct::printInfo() const {
 }
 
 double FoodProduct::calculateFinalPrice() const {
-    if (expiryDays < 3) {
-        return getPrice() * 0.8;
+    if (expiryDays < DISCOUNT_EXPIRY_DAYS) {
+        return getPrice() * DISCOUNT_COEFF;
     }
     return getPrice();
 }

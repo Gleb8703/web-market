@@ -33,7 +33,7 @@ Catalog& Catalog::operator-=(int itemNo) {
 void Catalog::printCatalog() const {
     int i = 0;
     for (const auto& p : products) {
-        std::cout << "-----------------\n" << i + 1;
+        std::cout << "----------------------------\n" << i + 1 << ": ";
         p->printInfo(); 
         i++;
     }

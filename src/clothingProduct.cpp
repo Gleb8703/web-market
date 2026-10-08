@@ -1,4 +1,5 @@
 #include "clothingProduct.h"
+#define DISCOUNT_COEFF 0.9
 
 ClothingProduct::ClothingProduct(int newItemNo, std::string_view newName, double newPrice, int newQuantity, std::string_view newSize, std::string_view newMaterial) 
     : Product(newItemNo, newName, newPrice, newQuantity),
@@ -15,7 +16,7 @@ void ClothingProduct::printInfo() const {
 }
 
 double ClothingProduct::calculateFinalPrice() const {
-    return getPrice() * 0.9;
+    return getPrice() * DISCOUNT_COEFF;
 }
 std::string ClothingProduct::getSizeInfo() const {
     return "Размер " + size + ", материал: " + material;

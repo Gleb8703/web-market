@@ -27,6 +27,7 @@ void menu() {
     std::cout << "7.Найти товар в каталоге\n";
     std::cout << "8.Отсортировать товары по цене\n";
     std::cout << "9.Удалить товар из каталога\n";
+    std::cout << "10.Посмотреть цены\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -190,6 +191,9 @@ int main() {
             break;
         case 9:
             removeProductMenu(catalog, cart);
+            break;
+        case 10:
+            catalog.printFinalPrices();
             break;
         default:
             std::cout << "Неверный пункт меню\n";
