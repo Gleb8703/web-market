@@ -18,9 +18,12 @@ void BookProduct::printInfo() const {
     std::cout << "Автор: " << author << "\n"
               << "Страниц: " << pages << "\n";
 }
-double BookProduct::calculateFinalPrice() const {
+double BookProduct::printDiscountPrices() const {
     if (pages > DISOUNT_PAGES) {
         return getPrice() * DISCOUNT_COEFF;
     }
     return getPrice();
+}
+int BookProduct::calculateReadingTime(int readingSpeed) const {
+    return pages/readingSpeed;
 }

@@ -18,7 +18,7 @@ void FoodProduct::printInfo() const {
               << "Хранение: " << getStorageInfo() << "\n";
 }
 
-double FoodProduct::calculateFinalPrice() const {
+double FoodProduct::printDiscountPrices() const {
     if (expiryDays < DISCOUNT_EXPIRY_DAYS) {
         return getPrice() * DISCOUNT_COEFF;
     }

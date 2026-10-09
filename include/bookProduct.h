@@ -11,5 +11,6 @@ public:
     void setAuthor(std::string_view newAuthor);
     void printInfo() const override;
     std::string getType() const override;
-    double calculateFinalPrice() const override;
+    double printDiscountPrices() const override;
+    int calculateReadingTime(int readingSpeed) const;      
 };

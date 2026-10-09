@@ -41,7 +41,7 @@ void Product::changeProduct() {
     setQuantity(readInt("Введите кол-во: "));
 }
 
-double Product::calculateFinalPrice() const {
+double Product::printDiscountPrices() const {
     return price;
 }
 

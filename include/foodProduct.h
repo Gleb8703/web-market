@@ -11,7 +11,7 @@ public:
 
     std::string getType() const override;                 
     void printInfo() const override;                      
-    double calculateFinalPrice() const override;          
+    double printDiscountPrices() const override;          
 
     bool isExpired(int daysPassed) const;
     std::string getStorageInfo() const;

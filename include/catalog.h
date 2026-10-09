@@ -14,11 +14,13 @@ public:
     Catalog& operator-=(int itemNo);
     void printCatalog() const;
     void printTypes() const;             
-    void printFinalPrices() const; 
+    void printDiscountPrices() const; 
     void sortCatalogByPrice();
     Product* findProduct(int itemNo) const;
     std::size_t size() const { return products.size(); }
     bool empty() const { return products.empty(); }
     Product* getProduct(std::size_t index) const;
-    void CheckExpiryDays(int days) const;
+    void checkExpiryDays() const;
+    void printReadingTime() const;
+
 };

@@ -8,6 +8,7 @@
 #include "input.h"
 #include "catalog.h"
 #include "foodProduct.h"
+#include "bookProduct.h"
 
 Catalog& Catalog::operator+=(std::unique_ptr<Product> product) {
     if (!product) return *this;
@@ -46,11 +47,11 @@ void Catalog::printTypes() const {
     }
 }
 
-void Catalog::printFinalPrices() const {
+void Catalog::printDiscountPrices() const {
     for (const auto& p : products) {
         std::cout << p->getName()
                   << ": базовая " << p->getPrice()
-                  << ", итоговая " << p->calculateFinalPrice() << "\n";  
+                  << ", итоговая " << p->printDiscountPrices() << "\n";  
     }
 }
 Product* Catalog::findProduct(int itemNo) const {
@@ -78,15 +79,25 @@ Product* Catalog::getProduct(std::size_t index) const {
     }
     return products[index].get();
 }
-void Catalog::CheckExpiryDays(int days) const {
+void Catalog::checkExpiryDays() const {
+    int daysPassed = readInt("Введите кол-во прошедших дней: ");
     for (const auto& p : products) {
         if (auto food = dynamic_cast<const FoodProduct*>(p.get())) {
+            std::cout << "----------------------------\n";
             p->printInfo();
-            if (food->isExpired(days)) {
+            if (food->isExpired(daysPassed)) {
                 std::cout << "Просрочено!!!" << std::endl;
             } else {
                 std::cout << "Годен" << std::endl;
             }
+        }
+    }
+}
+void Catalog::printReadingTime() const {
+    int readingSpeed = readInt("Сколько страниц вы читаете в час: ");
+    for (const auto& p : products) {
+        if (auto book = dynamic_cast<const BookProduct*>(p.get())) {
+            std::cout << p->getName() << ": ~" << book->calculateReadingTime(readingSpeed) << " ч.\n";
         }
     }
 }

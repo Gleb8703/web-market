@@ -29,6 +29,7 @@ void menu() {
     std::cout << "9.Удалить товар из каталога\n";
     std::cout << "10.Посмотреть цены\n";
     std::cout << "11.Проверить товары на годность\n";
+    std::cout << "12.Показать время чтения книг\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -194,11 +195,13 @@ int main() {
             removeProductMenu(catalog, cart);
             break;
         case 10:
-            catalog.printFinalPrices();
+            catalog.printDiscountPrices();
             break;
         case 11:
-            days = readInt("Введите кол-во прошедших дней: ");
-            catalog.CheckExpiryDays(days);
+            catalog.checkExpiryDays();
+            break;
+        case 12:
+            catalog.printReadingTime();
             break;
         default:
             std::cout << "Неверный пункт меню\n";

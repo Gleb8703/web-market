@@ -32,7 +32,7 @@ public:
 
     virtual std::string getType() const = 0;               
     virtual void printInfo() const;                      
-    virtual double calculateFinalPrice() const;
+    virtual double printDiscountPrices() const;
 
     friend std::ostream& operator<<(std::ostream& cout, const Product& product) {
         cout << product.name << ' ' << product.price << " byn" << '\n' << "Артикул: " << product.itemNo << '\n';
