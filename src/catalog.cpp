@@ -7,6 +7,7 @@
 #include "product.h"
 #include "input.h"
 #include "catalog.h"
+#include "foodProduct.h"
 
 Catalog& Catalog::operator+=(std::unique_ptr<Product> product) {
     if (!product) return *this;
@@ -76,4 +77,16 @@ Product* Catalog::getProduct(std::size_t index) const {
         return nullptr; 
     }
     return products[index].get();
+}
+void Catalog::CheckExpiryDays(int days) const {
+    for (const auto& p : products) {
+        if (auto food = dynamic_cast<const FoodProduct*>(p.get())) {
+            p->printInfo();
+            if (food->isExpired(days)) {
+                std::cout << "Просрочено!!!" << std::endl;
+            } else {
+                std::cout << "Годен" << std::endl;
+            }
+        }
+    }
 }

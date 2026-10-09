@@ -28,6 +28,7 @@ void menu() {
     std::cout << "8.Отсортировать товары по цене\n";
     std::cout << "9.Удалить товар из каталога\n";
     std::cout << "10.Посмотреть цены\n";
+    std::cout << "11.Проверить товары на годность\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -155,7 +156,7 @@ int main() {
     catalog += std::make_unique<ClothingProduct>(3002, "Куртка", 200.0, 20, "M", "кожа");
 
     int choise = 0;
-
+    int days = 0;
     do {
         menu();
         choise = readInt("Ваш выбор: ");
@@ -194,6 +195,10 @@ int main() {
             break;
         case 10:
             catalog.printFinalPrices();
+            break;
+        case 11:
+            days = readInt("Введите кол-во прошедших дней: ");
+            catalog.CheckExpiryDays(days);
             break;
         default:
             std::cout << "Неверный пункт меню\n";

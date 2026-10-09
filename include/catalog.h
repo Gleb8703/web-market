@@ -20,4 +20,5 @@ public:
     std::size_t size() const { return products.size(); }
     bool empty() const { return products.empty(); }
     Product* getProduct(std::size_t index) const;
+    void CheckExpiryDays(int days) const;
 };
