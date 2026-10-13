@@ -12,20 +12,20 @@
 
 Catalog& Catalog::operator+=(std::unique_ptr<Product> product) {
     if (!product) return *this;
-    for (std::size_t i = 0; i < products.size(); ++i) {
-        if (*products.at(i) == product->getItemNo()) {
+    for (const auto& p : products) {
+        if (*p == product->getItemNo()) {
             std::cout << "Товар с таким артикулом уже есть\n";
             return *this;
         }
     }
-    products.add(std::move(product));   // ← add + move
+    products.add(std::move(product));
     return *this;
 }
 
 Catalog& Catalog::operator-=(int itemNo) {
     for (std::size_t i = 0; i < products.size(); ++i) {
         if (*products.at(i) == itemNo) {
-            products.remove(i);   // ← remove
+            products.remove(i);
             return *this;
         }
     }
