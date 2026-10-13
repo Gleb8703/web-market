@@ -1,6 +1,6 @@
 #include "bookProduct.h"
-#define DISCOUNT_COEFF 0.9
-#define DISOUNT_PAGES 500
+constexpr double DISCOUNT_COEFF = 0.9;
+constexpr int DISCOUNT_PAGES = 500;
 
 BookProduct::BookProduct(int newItemNo, std::string_view newName, double newPrise, int newQuantity, int newPages, std::string_view newAuthor) :
 Product(newItemNo, newName, newPrise, newQuantity), pages(newPages), author(newAuthor) {}

@@ -157,7 +157,7 @@ int main() {
     catalog += std::make_unique<ClothingProduct>(3002, "Куртка", 200.0, 20, "M", "кожа");
 
     int choise = 0;
-    int days = 0;
+    
     do {
         menu();
         choise = readInt("Ваш выбор: ");

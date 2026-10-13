@@ -1,6 +1,6 @@
 #include "foodProduct.h"
-#define DISCOUNT_COEFF 0.8
-#define DISCOUNT_EXPIRY_DAYS 3
+constexpr double DISCOUNT_COEFF = 0.8;
+constexpr int DISCOUNT_EXPIRY_DAYS = 3;
 
 FoodProduct::FoodProduct(int newItemNo, std::string_view newName, double newPrice, int newQuantity,
                          int newExpiryDays, bool newIsRefrigerated)
