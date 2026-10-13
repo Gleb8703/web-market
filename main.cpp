@@ -219,8 +219,8 @@ int main() {
             break;
         case 15: {
             double minPrice = readDouble("Минимальная цена: ");
-            Product* p = catalog.findExpensiveThan(minPrice);
-            if (p) {
+            //const Product* p = catalog.findExpensiveThan(minPrice);
+            if (Product* p = catalog.findExpensiveThan(minPrice)) {
                 std::cout << "Найден:\n";
                 p->printInfo();
             } else {

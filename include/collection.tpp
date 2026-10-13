@@ -1,20 +1,16 @@
 #pragma once
-// ==================== Добавление ====================
-// Универсальная ссылка — работает и для копируемых, и для move-only (unique_ptr)
 template<typename T>
 template<typename U>
 void Collection<T>::add(U&& item) {
     _items.push_back(std::forward<U>(item));
 }
 
-// ==================== Удаление по индексу ====================
 template<typename T>
 void Collection<T>::remove(std::size_t index) {
     if (index < _items.size())
         _items.erase(_items.begin() + index);
 }
 
-// ==================== Доступ по индексу ====================
 template<typename T>
 T& Collection<T>::at(std::size_t index) {
     return _items[index];

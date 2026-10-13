@@ -9,7 +9,6 @@ class Collection {
     std::vector<T> _items;
 
 public:
-    // Добавление (универсальная ссылка — для копируемых и move-only)
     template<typename U>
     void add(U&& item);
 
