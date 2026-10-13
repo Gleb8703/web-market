@@ -10,6 +10,8 @@
 #include "include/bookProduct.h"
 #include "include/clothingProduct.h"
 #include "include/foodProduct.h"
+#include "include/customer.h"
+#include "include/collection.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -30,6 +32,10 @@ void menu() {
     std::cout << "10.Посмотреть цены со скидкой\n";
     std::cout << "11.Проверить товары на годность\n";
     std::cout << "12.Показать время чтения книг\n";
+    std::cout << "13.Товар по индексу (operator[])\n";
+    std::cout << "14.Очистить каталог (clear)\n";
+    std::cout << "15.Найти товар дороже N (findIf)\n";
+    std::cout << "16.Общая стоимость каталога (forEach)\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -140,6 +146,75 @@ std::unique_ptr<Product> createProductFromInput() {
     }
     return nullptr;
 }
+// ==================== Демонстрация шаблона Collection ====================
+void demonstrateCollection() {
+    std::cout << "\n========== Демонстрация шаблона Collection<T> ==========\n";
+    std::cout << "Один шаблон — два разных пользовательских типа:\n\n";
+
+    // ===== Тип 1: Product* =====
+    std::cout << "--- Collection<Product*> ---\n";
+
+    FoodProduct milk(1001, "Молоко", 2.5, 50, 7, true);
+    BookProduct book(2001, "Война и мир", 50.0, 10, 1300, "Л. Толстой");
+    ClothingProduct shirt(3001, "Футболка", 30.0, 100, "L", "хлопок");
+
+    Collection<Product*> productPtrs;
+    productPtrs.add(&milk);
+    productPtrs.add(&book);
+    productPtrs.add(&shirt);
+
+    std::cout << "Товаров в коллекции: " << productPtrs.size() << "\n";
+    productPtrs.printWith([](Product* p) {
+        std::cout << "  " << p->getName() << " (" << p->getType()
+                  << ") — " << p->getPrice() << " byn\n";
+    });
+
+    // Поиск через findIf
+    Product** expensive = productPtrs.findIf([](Product* p) {
+        return p->getPrice() > 40;
+    });
+    if (expensive)
+        std::cout << "Первый дорогой товар: " << (*expensive)->getName() << "\n";
+
+    // Удаление и размер
+    productPtrs.remove(0);
+    std::cout << "После удаления первого — размер: " << productPtrs.size() << "\n";
+
+    // ===== Тип 2: Customer (покупатель) =====
+    std::cout << "\n--- Collection<Customer> ---\n";
+
+    Collection<Customer> customers;
+    customers.add(Customer("Иванов Иван",   "ivanov@mail.ru",  "+375291112233"));
+    customers.add(Customer("Петров Пётр",   "petrov@mail.ru",  "+375292223344"));
+    customers.add(Customer("Сидоров Сидор", "sidorov@mail.ru", "+375293334455"));
+
+    std::cout << "Всего покупателей: " << customers.size() << "\n";
+    customers.printWith([](const Customer& c) {
+        std::cout << "  " << c.getName() << " — " << c.getEmail() << "\n";
+    });
+
+    // Поиск по email
+    Customer* found = customers.findIf([](const Customer& c) {
+        return c.getEmail() == "petrov@mail.ru";
+    });
+    if (found)
+        std::cout << "Найден по email: " << found->getName()
+                  << " (" << found->getPhone() << ")\n";
+
+    // ===== Шаблонная функция forEach =====
+    std::cout << "\n--- Шаблонная функция forEach ---\n";
+    forEach(customers, [](const Customer& c) {
+        std::cout << "  " << c.getName() << ": " << c.getPhone() << "\n";
+    });
+
+    // ===== Очистка =====
+    customers.clear();
+    productPtrs.clear();
+    std::cout << "\nПосле clear() — покупателей: " << customers.size()
+              << ", товаров: " << productPtrs.size() << "\n";
+
+    std::cout << "=======================================================\n\n";
+}
 int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -148,7 +223,7 @@ int main() {
     Catalog catalog;
     std::vector<std::unique_ptr<Product>> orders;
     Cart cart;
-
+    demonstrateCollection();
     catalog += std::make_unique<FoodProduct>(1001, "Молоко", 2.5, 50, 7, true);
     catalog += std::make_unique<FoodProduct>(1002, "Хлеб", 1.8, 30, 2, false);
     catalog += std::make_unique<BookProduct>(2001, "Война и мир", 50.0, 10, 1300, "Л. Толстой");
@@ -202,6 +277,28 @@ int main() {
             break;
         case 12:
             catalog.printReadingTime();
+            break;
+        case 13: {
+            int index = readInt("Индекс товара: ");
+            catalog.printByIndex(index);
+            break;
+        }
+        case 14:
+            catalog.clearAll();
+            break;
+        case 15: {
+            double minPrice = readDouble("Минимальная цена: ");
+            Product* p = catalog.findExpensiveThan(minPrice);
+            if (p) {
+                std::cout << "Найден:\n";
+                p->printInfo();
+            } else {
+                std::cout << "Не найдено\n";
+            }
+            break;
+        }
+        case 16:
+            catalog.printTotalValue();
             break;
         default:
             std::cout << "Неверный пункт меню\n";

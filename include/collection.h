@@ -47,9 +47,10 @@ public:
     void printWith(Printer printer) const;
 };
 
-// Шаблонные функции
 template<typename T, typename Func>
-void forEach(Collection<T>& c, Func func);
+void forEach(Collection<T>& c, Func func);          
 
-// Включаем реализацию
-// #include "collection.tpp"
+template<typename T, typename Func>
+void forEach(const Collection<T>& c, Func func);   
+
+#include "collection.tpp"

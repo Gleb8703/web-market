@@ -7,7 +7,7 @@ class Product;
 class Cart {
     double totalPrice = 0;
     int totalQuantity = 0;
-    std::vector<Product*> cartProducts;
+    Collection<Product*> cartProducts;
 public:
     void delProductFromCart(std::size_t index);
     void printCart() const;

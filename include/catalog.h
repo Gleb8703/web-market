@@ -8,7 +8,7 @@
 
 class Product;
 class Catalog {
-    std::vector<std::unique_ptr<Product>> products;
+    Collection<std::unique_ptr<Product>> products;
 public:
     Catalog& operator+=(std::unique_ptr<Product> product);
     Catalog& operator-=(int itemNo);
@@ -22,5 +22,9 @@ public:
     Product* getProduct(std::size_t index) const;
     void checkExpiryDays() const;
     void printReadingTime() const;
+    void printByIndex(std::size_t index) const;          // operator[]
+    void clearAll();                                     // clear
+    Product* findExpensiveThan(double minPrice) const;   // findIf
+    void printTotalValue() const;                        // forEach
 
 };

@@ -45,23 +45,6 @@ double Product::printDiscountPrices() const {
     return price;
 }
 
-// std::ostream& operator<<(std::ostream& cout, const Product& product) {
-//     cout << product.name << ' ' << product.price << " byn" << '\n' << "Артикул: " << product.itemNo << '\n';
-//     if (product.quantity) {
-//         cout << "В наличии: " << product.quantity;
-//     } else {
-//         cout << "Нет в наличии: " << '\n';
-//     }
-//     return cout;
-// }
-// std::istream& operator>>(std::istream& is, Product& product) {
-//     product.itemNo  = readInt("Введите артикул: ");
-//     product.name    = readString("Введите имя: ");
-//     product.price   = readDouble("Введите стоимость: ");
-//     product.quantity = readInt("Введите кол-во: ");
-//     return is;
-// }
-
 bool Product::operator==(const Product& other) const {
     return itemNo == other.itemNo;
 }

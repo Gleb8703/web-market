@@ -12,57 +12,56 @@
 
 Catalog& Catalog::operator+=(std::unique_ptr<Product> product) {
     if (!product) return *this;
-    for (const auto& p : products) {
-        if (*p == product->getItemNo()) {
+    for (std::size_t i = 0; i < products.size(); ++i) {
+        if (*products.at(i) == product->getItemNo()) {
             std::cout << "Товар с таким артикулом уже есть\n";
             return *this;
         }
     }
-    products.push_back(std::move(product));
+    products.add(std::move(product));   // ← add + move
     return *this;
 }
+
 Catalog& Catalog::operator-=(int itemNo) {
-    auto it = std::find_if(products.begin(), products.end(),
-        [itemNo](const std::unique_ptr<Product>& p) { return *p == itemNo; });
-    if (it == products.end()) {
-        std::cout << "Товара с таким артикулом нет\n";
-        return *this;
+    for (std::size_t i = 0; i < products.size(); ++i) {
+        if (*products.at(i) == itemNo) {
+            products.remove(i);   // ← remove
+            return *this;
+        }
     }
-    products.erase(it);
+    std::cout << "Товара с таким артикулом нет\n";
     return *this;
 }
 
 void Catalog::printCatalog() const {
-    int i = 0;
-    for (const auto& p : products) {
+    for (std::size_t i = 0; i < products.size(); ++i) {
         std::cout << "----------------------------\n" << i + 1 << ": ";
-        p->printInfo(); 
-        i++;
+        products.at(i)->printInfo();
     }
 }
 
 void Catalog::printTypes() const {
-    for (const auto& p : products) {
-        std::cout << p->getItemNo() << " — " << p->getType() << "\n"; 
-    }
+    products.printWith([](const std::unique_ptr<Product>& p) {
+        std::cout << p->getItemNo() << " — " << p->getType() << "\n";
+    });
 }
 
 void Catalog::printDiscountPrices() const {
-    for (const auto& p : products) {
+    products.printWith([](const std::unique_ptr<Product>& p) {
         std::cout << p->getName()
                   << ": базовая " << p->getPrice()
-                  << ", итоговая " << p->printDiscountPrices() << "\n";  
-    }
+                  << ", итоговая " << p->printDiscountPrices() << "\n";
+    });
 }
+
 Product* Catalog::findProduct(int itemNo) const {
-    for (const auto& p : products) {
-        if (*p == itemNo) {
-            return p.get();
-        }
+    for (std::size_t i = 0; i < products.size(); ++i) {
+        if (*products.at(i) == itemNo) return products.at(i).get();
     }
     return nullptr;
 }
-void Catalog:: sortCatalogByPrice() {
+
+void Catalog::sortCatalogByPrice() {
     if (products.empty()) {
         std::cout << "Нет товаров\n";
         return;
@@ -73,31 +72,71 @@ void Catalog:: sortCatalogByPrice() {
         });
     std::cout << "Товары отсортированы по цене:\n";
 }
+
 Product* Catalog::getProduct(std::size_t index) const {
-    if (index >= products.size()) {
-        return nullptr; 
-    }
-    return products[index].get();
+    if (index >= products.size()) return nullptr;
+    return products.at(index).get();
 }
+
 void Catalog::checkExpiryDays() const {
     int daysPassed = readInt("Введите кол-во прошедших дней: ");
-    for (const auto& p : products) {
-        if (auto food = dynamic_cast<const FoodProduct*>(p.get())) {
+    for (std::size_t i = 0; i < products.size(); ++i) {
+        if (auto food = dynamic_cast<const FoodProduct*>(products.at(i).get())) {
             std::cout << "----------------------------\n";
-            p->printInfo();
-            if (food->isExpired(daysPassed)) {
-                std::cout << "Просрочено!!!" << std::endl;
-            } else {
-                std::cout << "Годен" << std::endl;
-            }
+            products.at(i)->printInfo();
+            if (food->isExpired(daysPassed))
+                std::cout << "Просрочено!!!\n";
+            else
+                std::cout << "Годен\n";
         }
     }
 }
+
 void Catalog::printReadingTime() const {
     int readingSpeed = readInt("Сколько страниц вы читаете в час: ");
-    for (const auto& p : products) {
-        if (auto book = dynamic_cast<const BookProduct*>(p.get())) {
-            std::cout << p->getName() << ": ~" << book->calculateReadingTime(readingSpeed) << " ч.\n";
+    for (std::size_t i = 0; i < products.size(); ++i) {
+        if (auto book = dynamic_cast<const BookProduct*>(products.at(i).get())) {
+            std::cout << products.at(i)->getName()
+                      << ": ~" << book->calculateReadingTime(readingSpeed) << " ч.\n";
         }
     }
+}
+// operator[]
+void Catalog::printByIndex(std::size_t index) const {
+    if (index >= products.size()) {
+        std::cout << "Неверный индекс\n";
+        return;
+    }
+    std::cout << "Товар по индексу " << index << ":\n";
+    products[index]->printInfo();   // ← operator[]
+}
+
+// clear
+void Catalog::clearAll() {
+    products.clear();
+    std::cout << "Каталог очищен\n";
+}
+
+// findIf
+Product* Catalog::findExpensiveThan(double minPrice) const {
+    for (std::size_t i = 0; i < products.size(); ++i) {
+        if (products.at(i)->getPrice() > minPrice) {
+            return products.at(i).get();
+        }
+    }
+    return nullptr;
+}
+
+void Catalog::printTotalValue() const {
+    if (products.empty()) {
+        std::cout << "Каталог пуст\n";
+        return;
+    }
+
+    double total = 0.0;
+    forEach(products, [&total](const std::unique_ptr<Product>& p) {
+        total += p->getPrice() * p->getQuantity();
+    });
+
+    std::cout << "Общая стоимость каталога: " << total << " byn\n";
 }
