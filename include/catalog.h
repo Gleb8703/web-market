@@ -8,7 +8,7 @@
 
 class Product;
 class Catalog {
-    Collection<std::unique_ptr<Product>> products;
+    std::vector<std::unique_ptr<Product>> products;
 public:
     Catalog& operator+=(std::unique_ptr<Product> product);
     Catalog& operator-=(int itemNo);

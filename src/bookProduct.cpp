@@ -19,7 +19,7 @@ void BookProduct::printInfo() const {
               << "Страниц: " << pages << "\n";
 }
 double BookProduct::printDiscountPrices() const {
-    if (pages > DISOUNT_PAGES) {
+    if (pages > DISCOUNT_PAGES) {
         return getPrice() * DISCOUNT_COEFF;
     }
     return getPrice();
