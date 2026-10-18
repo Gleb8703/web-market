@@ -147,11 +147,9 @@ std::unique_ptr<Product> createProductFromInput() {
     return nullptr;
 }
 void demonstrateCustomer(const Catalog& catalog) {
-    std::cout << "\n=== Customer + Collection<Product*> ===\n";
 
     Customer ivan("Иванов Иван", "ivanov@mail.ru", "+375291112233");
 
-    // Смотрим на первые два товара каталога
     if (catalog.size() >= 1) ivan.viewProduct(catalog.getProduct(0));
     if (catalog.size() >= 2) ivan.viewProduct(catalog.getProduct(1));
     if (catalog.size() >= 3) ivan.viewProduct(catalog.getProduct(2));
