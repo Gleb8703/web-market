@@ -34,8 +34,9 @@ void menu() {
     std::cout << "12.Показать время чтения книг\n";
     std::cout << "13.Товар по индексу (operator[])\n";
     std::cout << "14.Очистить каталог (clear)\n";
-    std::cout << "15.Найти товар дороже N (findIf)\n";
+    std::cout << "15.Найти товар дороже (findIf)\n";
     std::cout << "16.Общая стоимость каталога (forEach)\n";
+    std::cout << "17.Показать покупателей\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {

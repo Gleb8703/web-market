@@ -31,7 +31,6 @@ const T& Collection<T>::operator[](std::size_t index) const {
     return _items[index];
 }
 
-// ==================== Размер ====================
 template<typename T>
 std::size_t Collection<T>::size() const {
     return _items.size();
@@ -42,13 +41,11 @@ bool Collection<T>::empty() const {
     return _items.empty();
 }
 
-// ==================== Очистка ====================
 template<typename T>
 void Collection<T>::clear() {
     _items.clear();
 }
 
-// ==================== Поиск по критерию ====================
 template<typename T>
 template<typename Predicate>
 T* Collection<T>::findIf(Predicate pred) {
@@ -65,7 +62,6 @@ const T* Collection<T>::findIf(Predicate pred) const {
     return nullptr;
 }
 
-// ==================== Вывод через лямбду ====================
 template<typename T>
 template<typename Printer>
 void Collection<T>::printWith(Printer printer) const {
@@ -73,15 +69,12 @@ void Collection<T>::printWith(Printer printer) const {
         printer(item);
 }
 
-// ==================== Шаблонная функция forEach ====================
-// Неconst — можно менять элементы
 template<typename T, typename Func>
 void forEach(Collection<T>& c, Func func) {
     for (std::size_t i = 0; i < c.size(); ++i)
         func(c.at(i));
 }
 
-// Const — только читать
 template<typename T, typename Func>
 void forEach(const Collection<T>& c, Func func) {
     for (std::size_t i = 0; i < c.size(); ++i)
