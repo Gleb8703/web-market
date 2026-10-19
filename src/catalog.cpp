@@ -119,11 +119,13 @@ void Catalog::clearAll() {
 
 // findIf
 Product* Catalog::findExpensiveThan(double minPrice) const {
-    for (std::size_t i = 0; i < products.size(); ++i) {
-        if (products.at(i)->getPrice() > minPrice) {
-            return products.at(i).get();
-        }
+    auto found = products.findIf([minPrice](const std::unique_ptr<Product>& p) {
+        return p->getPrice() > minPrice;
+    });
+    if (found) {
+        return found->get();
     }
+    
     return nullptr;
 }
 
