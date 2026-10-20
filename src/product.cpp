@@ -6,9 +6,14 @@
 #include "bookProduct.h"
 #include "clothingProduct.h"
 #include "foodProduct.h"
+#include "exceptions/invalidData.h"
 
 Product::Product(int newItemNo, std::string_view newName, double newPrice, int newQuantity)
-    : itemNo(newItemNo), name(newName), price(newPrice), quantity(newQuantity) {}
+    : itemNo(newItemNo), name(newName), price(newPrice), quantity(newQuantity) {
+        if (price <= 0) {
+            throw InvalidProductDataException(" цена ");
+        }
+    }
 
 void Product::setItemNo(unsigned int newItemNo) {
     itemNo = newItemNo;

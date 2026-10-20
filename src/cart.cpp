@@ -3,6 +3,7 @@
 #include "cart.h"
 #include "product.h"
 #include <algorithm>
+#include "exceptions/exceptions.h"
 
 void Cart::printCart() const {
     std::cout << "Стоимость корзины: " << totalPrice
@@ -37,8 +38,7 @@ Cart& Cart::operator+=(Product* product) {
     if (!product) return *this;
     for (std::size_t i = 0; i < cartProducts.size(); ++i) {
         if (*cartProducts.at(i) == *product) {
-            std::cout << "Товар уже в корзине\n";
-            return *this;
+            throw AlreadyInCartException();
         }
     }
     cartProducts.add(product);

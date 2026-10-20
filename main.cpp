@@ -12,6 +12,7 @@
 #include "include/foodProduct.h"
 #include "include/customer.h"
 #include "include/collection.h"
+#include "exceptions/exceptions.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -37,6 +38,12 @@ void menu() {
     std::cout << "15.Найти товар дороже (findIf)\n";
     std::cout << "16.Общая стоимость каталога (forEach)\n";
     std::cout << "17.Показать покупателей\n";
+    std::cout << "---------------Исключения---------------\n";
+    std::cout << "18.Уже в корзине\n";
+    std::cout << "19.Дубликат в каталоге\n";
+    std::cout << "20.Неверные данные\n";
+    std::cout << "21.Товаров не достаточно\n";
+    std::cout << "22.Товар не найден\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -69,9 +76,6 @@ void addToCartMenu(const Catalog& catalog, Cart& cart) {
     int index = readInt("Введите номер товара: ");
     if (index > 0 && index <= static_cast<int>(catalog.size())) {
         cart += catalog.getProduct(index - 1);
-        std::cout << "Выбранный товар успешно добавлен" << std::endl; 
-    } else {
-        std::cout << "Неверный индекс\n";
     }
 }
 
@@ -97,13 +101,14 @@ void makeOrderMenu(Cart& cart) {
     Product* cartProduct = cart.getProduct(index - 1);
 
     if (*cartProduct < quantity) {
-        std::cout << "Недостаточно товаров для заказа\n";
+        throw NotEnoughStockException(quantity, cartProduct->getQuantity());
     } else {
         cartProduct->setQuantity(cartProduct->getQuantity() - quantity);
         cart -= cartProduct;
         std::cout << "Товар успешно заказан\n";
     }
 }
+
 void removeProductMenu(Catalog& catalog, Cart& cart) {
     catalog.printCatalog();
     if (catalog.empty()) {
@@ -179,78 +184,101 @@ int main() {
     int choise = 0;
 
     do {
-        menu();
-        choise = readInt("Ваш выбор: ");
+        try {
+            menu();
+            choise = readInt("Ваш выбор: ");
 
-        switch (choise) {
-        case 0:
-            std::cout << "Выход...\n";
-            break;
-        case 1:
-            catalog += createProductFromInput();
-            break;
-        case 2:
-            catalog.printCatalog();
-            break;
-        case 3:
-            catalog.printTypes(); 
-            break;
-        case 4:
-            addToCartMenu(catalog, cart);
-            break;
-        case 5:
-            printCart(cart);
-            break;
-        case 6:
-            makeOrderMenu(cart);
-            break;
-        case 7:
-            std::cout << catalog.findProduct(readInt("Введите артикул"));
-            break;
-        case 8:
-            catalog.sortCatalogByPrice();
-            catalog.printCatalog();
-            break;
-        case 9:
-            removeProductMenu(catalog, cart);
-            break;
-        case 10:
-            catalog.printDiscountPrices();
-            break;
-        case 11:
-            catalog.checkExpiryDays();
-            break;
-        case 12:
-            catalog.printReadingTime();
-            break;
-        case 13: {
-            int index = readInt("Индекс товара: ");
-            catalog.printByIndex(index);
-            break;
-        }
-        case 14:
-            catalog.clearAll();
-            break;
-        case 15: {
-            double minPrice = readDouble("Минимальная цена: ");
-            if (const Product* p = catalog.findExpensiveThan(minPrice)) {
-                std::cout << "Найден:\n";
-                p->printInfo();
-            } else {
-                std::cout << "Не найдено\n";
+            switch (choise) {
+            case 0:
+                std::cout << "Выход...\n";
+                break;
+            case 1:
+                catalog += createProductFromInput();
+                break;
+            case 2:
+                catalog.printCatalog();
+                break;
+            case 3:
+                catalog.printTypes(); 
+                break;
+            case 4:
+                addToCartMenu(catalog, cart);
+                break;
+            case 5:
+                printCart(cart);
+                break;
+            case 6:
+                makeOrderMenu(cart);
+                break;
+            case 7:
+                std::cout << catalog.findProduct(readInt("Введите артикул"));
+                break;
+            case 8:
+                catalog.sortCatalogByPrice();
+                catalog.printCatalog();
+                break;
+            case 9:
+                removeProductMenu(catalog, cart);
+                break;
+            case 10:
+                catalog.printDiscountPrices();
+                break;
+            case 11:
+                catalog.checkExpiryDays();
+                break;
+            case 12:
+                catalog.printReadingTime();
+                break;
+            case 13: {
+                int index = readInt("Индекс товара: ");
+                catalog.printByIndex(index);
+                break;
             }
-            break;
+            case 14:
+                catalog.clearAll();
+                break;
+            case 15: {
+                double minPrice = readDouble("Минимальная цена: ");
+                if (const Product* p = catalog.findExpensiveThan(minPrice)) {
+                    std::cout << "Найден:\n";
+                    p->printInfo();
+                } else {
+                    std::cout << "Не найдено\n";
+                }
+                break;
+            }
+            case 16:
+                catalog.printTotalValue();
+                break;
+            case 17:
+                demonstrateCustomer(catalog);
+                break;
+            case 18:
+                cart += catalog.getProduct(1);
+                cart += catalog.getProduct(1);
+                break;
+            case 19:
+                catalog += std::make_unique<FoodProduct>(1001, "Молоко", 2.5, 50, 7, true);
+                break;
+            case 20:
+                catalog += std::make_unique<FoodProduct>(1001, "Молоко", -2.5, 50, 7, true);
+                break;
+            case 21:
+                cart += catalog.getProduct(1);
+                makeOrderMenu(cart);
+                break;
+            case 22:
+                std::cout << catalog.findProduct(9999);
+            default:
+                std::cout << "Неверный пункт меню\n";
+                break;
+            }
         }
-        case 16:
-            catalog.printTotalValue();
-            break;
-        case 17:
-            demonstrateCustomer(catalog);
-            break;
-        default:
-            std::cout << "Неверный пункт меню\n";
-            break;
-        }
+        catch (const AlreadyInCartException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; }
+        catch (const DuplicateItemException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 
+        catch (const InvalidProductDataException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 
+        catch (const NotEnoughStockException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 
+        catch (const ProductNotFoundException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; }  
     } while (choise != 0);
 
     return 0;

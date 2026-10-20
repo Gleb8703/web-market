@@ -9,13 +9,13 @@
 #include "catalog.h"
 #include "foodProduct.h"
 #include "bookProduct.h"
+#include "exceptions/exceptions.h"
 
 Catalog& Catalog::operator+=(std::unique_ptr<Product> product) {
     if (!product) return *this;
     for (const auto& p : products) {
         if (*p == product->getItemNo()) {
-            std::cout << "Товар с таким артикулом уже есть\n";
-            return *this;
+            throw DuplicateItemException(product->getItemNo());
         }
     }
     products.add(std::move(product));
@@ -55,10 +55,13 @@ void Catalog::printDiscountPrices() const {
 }
 
 Product* Catalog::findProduct(int itemNo) const {
-    for (std::size_t i = 0; i < products.size(); ++i) {
-        if (*products.at(i) == itemNo) return products.at(i).get();
+    auto found = products.findIf([itemNo](const std::unique_ptr<Product>& p) {
+        return *p == itemNo;
+    });
+    if (found) {
+        return found->get();
     }
-    return nullptr;
+    throw ProductNotFoundException(itemNo);
 }
 
 void Catalog::sortCatalogByPrice() {
@@ -125,7 +128,6 @@ Product* Catalog::findExpensiveThan(double minPrice) const {
     if (found) {
         return found->get();
     }
-    
     return nullptr;
 }
 
