@@ -55,10 +55,9 @@ void Catalog::printDiscountPrices() const {
 }
 
 Product* Catalog::findProduct(int itemNo) const {
-    auto found = products.findIf([itemNo](const std::unique_ptr<Product>& p) {
+    if (auto found = products.findIf([itemNo](const std::unique_ptr<Product>& p) {
         return *p == itemNo;
-    });
-    if (found) {
+    })) {
         return found->get();
     }
     throw ProductNotFoundException(itemNo);
