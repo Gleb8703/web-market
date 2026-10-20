@@ -269,6 +269,7 @@ int main() {
                 break;
             case 22:
                 std::cout << catalog.findProduct(9999);
+                break;
             default:
                 std::cout << "Неверный пункт меню\n";
                 break;

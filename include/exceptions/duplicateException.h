@@ -1,7 +1,8 @@
 #pragma once
 #include "baseException.h"
+#include <format>
 class DuplicateItemException : public BaseException {
 public:
-    DuplicateItemException(int itemNo) 
+    explicit DuplicateItemException(int itemNo) 
         : BaseException("Товар с артикулом " + std::to_string(itemNo) + " уже существует!") {}
 };

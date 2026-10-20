@@ -1,7 +1,8 @@
 #pragma once
 #include "baseException.h"
+#include <format>
 class NotEnoughStockException : public BaseException {
 public:
-    NotEnoughStockException(int requested, int available) 
+    explicit NotEnoughStockException(int requested, int available) 
         : BaseException("Недостаточно товара! Запрошено: " + std::to_string(requested) + ", в наличии: " + std::to_string(available)) {}
 };

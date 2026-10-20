@@ -2,6 +2,6 @@
 #include "baseException.h"
 class AlreadyInCartException : public BaseException{
 public:
-    AlreadyInCartException() 
+    explicit AlreadyInCartException() 
         : BaseException("Этот товар уже находится в корзине!") {}
 };
