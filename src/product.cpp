@@ -13,6 +13,9 @@ Product::Product(int newItemNo, std::string_view newName, double newPrice, int n
         if (price <= 0) {
             throw InvalidProductDataException(" цена ");
         }
+        if (quantity < 0) {
+            throw InvalidProductDataException(" количество ");
+        }
     }
 
 void Product::setItemNo(unsigned int newItemNo) {
