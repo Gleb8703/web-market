@@ -8,13 +8,14 @@
 #include <clothingProduct.h>
 #include <stdexcept>
 #include <sstream>
+#include "exceptions/fileException.h"
 
 // ==================== СОХРАНЕНИЕ ====================
 
 void FileManager::saveState(const std::string& filename, const Catalog& catalog, const Cart& cart) {
     std::ofstream out(filename);
     if (!out.is_open()) {
-        throw std::runtime_error("Не удалось открыть файл для сохранения: " + filename);
+        throw FileException(filename);
     }
 
     // Вызываем специализированные методы
@@ -79,13 +80,12 @@ bool FileManager::loadState(const std::string& filename, Catalog& catalog, Cart&
             else if (type == "CLOTH") loadCloth(in, catalog);
             else if (type == "CART")  loadCartItem(in, catalog, cart);
             else {
-                // Пропускаем неизвестную строку, чтобы не сломать чтение
                 std::string dummy;
                 std::getline(in, dummy);
             }
         }
     } 
-    catch (const std::exception& e) {
+    catch (const FileException& e) {
         std::cerr << "Ошибка при загрузке данных: " << e.what() << "\n";
         return false;
     }
@@ -99,7 +99,7 @@ void FileManager::loadFood(std::ifstream& in, Catalog& catalog) {
     double price;
     
     if (!(in >> id >> std::quoted(name) >> price >> qty >> exp >> refr)) {
-        throw std::runtime_error("Ошибка чтения данных FOOD (файл поврежден)");
+        throw FileException("Ошибка чтения данных FOOD (файл поврежден)");
     }
     catalog += std::make_unique<FoodProduct>(id, name, price, qty, exp, refr);
 }
@@ -110,7 +110,7 @@ void FileManager::loadBook(std::ifstream& in, Catalog& catalog) {
     double price;
     
     if (!(in >> id >> std::quoted(name) >> price >> qty >> pages >> std::quoted(author))) {
-        throw std::runtime_error("Ошибка чтения данных BOOK (файл поврежден)");
+        throw FileException("Ошибка чтения данных BOOK (файл поврежден)");
     }
     catalog += std::make_unique<BookProduct>(id, name, price, qty, pages, author);
 }
@@ -121,7 +121,7 @@ void FileManager::loadCloth(std::ifstream& in, Catalog& catalog) {
     double price;
     
     if (!(in >> id >> std::quoted(name) >> price >> qty >> std::quoted(size) >> std::quoted(material))) {
-        throw std::runtime_error("Ошибка чтения данных CLOTH (файл поврежден)");
+        throw FileException("Ошибка чтения данных CLOTH (файл поврежден)");
     }
     catalog += std::make_unique<ClothingProduct>(id, name, price, qty, size, material);
 }
@@ -129,19 +129,16 @@ void FileManager::loadCloth(std::ifstream& in, Catalog& catalog) {
 void FileManager::loadCartItem(std::ifstream& in, Catalog& catalog, Cart& cart) {
     int id;
     if (!(in >> id)) {
-        throw std::runtime_error("Ошибка чтения данных CART");
+        throw FileException("Ошибка чтения данных CART");
     }
-    
-    // Проверка связей: товар из корзины должен существовать в каталоге!
     Product* p = catalog.findProduct(id);
     if (p) {
         cart += p;
     } else {
-        throw std::runtime_error("Нарушение связей: товар из корзины (ID=" + std::to_string(id) + ") не найден в каталоге!");
+        throw FileException("Нарушение связей: товар из корзины (ID=" + std::to_string(id) + ") не найден в каталоге!");
     }
 }
 
-// ==================== ЛОГИРОВАНИЕ И ОТЧЕТ ====================
 
 void FileManager::logAction(const std::string& logFilename, const std::string& action) {
     std::ofstream log(logFilename, std::ios::app); // Режим добавления
@@ -153,7 +150,6 @@ void FileManager::logAction(const std::string& logFilename, const std::string& a
     std::time_t now = std::time(nullptr);
     std::tm timeInfo;
     
-    // Безопасный способ получить локальное время (работает и в Windows, и в Linux)
 #ifdef _WIN32
     localtime_s(&timeInfo, &now);
 #else
