@@ -6,13 +6,7 @@
 #include <foodProduct.h>
 #include <bookProduct.h>
 #include <clothingProduct.h>
-
-#include "file.h" // Или "fileManager.h", как ты его назвал
-#include <iostream>
-#include <fstream>
-#include <iomanip>  // Для std::quoted
 #include <stdexcept>
-#include <ctime>
 #include <sstream>
 
 // ==================== СОХРАНЕНИЕ ====================

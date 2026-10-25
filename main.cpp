@@ -198,14 +198,10 @@ int main() {
             choise = readInt("Ваш выбор: ");
 
             switch (choise) {
-            case 0:
+             case 0:
                 FileManager::logAction(logFile, "Пользователь завершил работу программы.");
-                try {
-                    FileManager::saveState("state.txt", catalog, cart);
-                    std::cout << "Автосохранение выполнено. Выход...\n";
-                } catch (const std::exception& e) {
-                    std::cout << "Ошибка автосохранения: " << e.what() << "\n";
-                }
+                FileManager::saveState("state.txt", catalog, cart);
+                std::cout << "Автосохранение выполнено. Выход...\n";
                 break;
             case 1:
                 catalog += createProductFromInput();
@@ -290,20 +286,13 @@ int main() {
                 std::cout << catalog.findProduct(9999);
                 break;
             case 23:
-                try {
                 FileManager::saveState("state.txt", catalog, cart);
                 FileManager::logAction(logFile, "Ручное сохранение состояния системы.");
                 std::cout << "Данные успешно сохранены!\n";
-                } catch (const std::exception& e) {
-                    std::cout << "Ошибка сохранения: " << e.what() << "\n"; }
                 break;
             case 24:
-                try {
-                    FileManager::generateReport("report.txt", catalog, cart);
-                    std::cout << "Отчет успешно создан в файле report.txt!\n";
-                } catch (const std::exception& e) {
-                    std::cout << "Ошибка создания отчета: " << e.what() << "\n";
-                }
+                FileManager::generateReport("report.txt", catalog, cart);
+                std::cout << "Отчет успешно создан в файле report.txt!\n";
                 break;
             default:
                 std::cout << "Неверный пункт меню\n";
@@ -311,9 +300,9 @@ int main() {
             }
              
         }
-        catch (const AlreadyInCartException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; }
-        catch (const InvalidProductDataException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 
-        catch (const ProductNotFoundException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; }  
+        catch (const AlreadyInCartException& e) {  std::cout <<"ОШИБКА " << e.what() << std::endl; }
+        catch (const InvalidProductDataException& e) {  std::cout <<"ОШИБКА " << e.what() << std::endl; }
+        catch (const ProductNotFoundException& e) {  std::cout <<"ОШИБКА " << e.what() << std::endl; }
         catch (const DuplicateItemException& e) {
             std::cout << "\n[ОШИБКА КАТАЛОГА] " << e.what() << "\n";
             FileManager::logAction(logFile, std::string("ОШИБКА: ") + e.what());
