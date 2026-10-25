@@ -15,4 +15,7 @@ public:
 
     bool isExpired(int daysPassed) const;
     std::string getStorageInfo() const;
+    int getExpiryDays() const { return expiryDays; }
+    bool getRefrigerated() const { return isRefrigerated; }
+
 };

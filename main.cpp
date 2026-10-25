@@ -13,6 +13,7 @@
 #include "include/customer.h"
 #include "include/collection.h"
 #include "exceptions/exceptions.h"
+#include "file.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -44,6 +45,9 @@ void menu() {
     std::cout << "20.Неверные данные\n";
     std::cout << "21.Товаров не достаточно\n";
     std::cout << "22.Товар не найден\n";
+    std::cout << "-----------------Файлы------------------\n";
+    std::cout << "23.Сохранить данные в файл\n";
+    std::cout << "24.Сгенерировать текстовый отчет\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -174,12 +178,15 @@ int main() {
     Catalog catalog;
     std::vector<std::unique_ptr<Product>> orders;
     Cart cart;
-    catalog += std::make_unique<FoodProduct>(1001, "Молоко", 2.5, 50, 7, true);
-    catalog += std::make_unique<FoodProduct>(1002, "Хлеб", 1.8, 30, 2, false);
-    catalog += std::make_unique<BookProduct>(2001, "Война и мир", 50.0, 10, 1300, "Л. Толстой");
-    catalog += std::make_unique<BookProduct>(2002, "Преступление и наказание", 40.0, 15, 670, "Ф. Достоевский");
-    catalog += std::make_unique<ClothingProduct>(3001, "Футболка", 30.0, 100, "L", "хлопок");
-    catalog += std::make_unique<ClothingProduct>(3002, "Куртка", 200.0, 20, "M", "кожа");
+    if (!FileManager::loadState("state.txt", catalog, cart)) {
+        std::cout << "Загрузка не удалась. Создаем базовый каталог.\n";
+        catalog += std::make_unique<FoodProduct>(1001, "Молоко", 2.5, 50, 7, true);
+        catalog += std::make_unique<FoodProduct>(1002, "Хлеб", 1.8, 30, 2, false);
+        catalog += std::make_unique<BookProduct>(2001, "Война и мир", 50.0, 10, 1300, "Л. Толстой");
+        catalog += std::make_unique<BookProduct>(2002, "Преступление и наказание", 40.0, 15, 670, "Ф. Достоевский");
+        catalog += std::make_unique<ClothingProduct>(3001, "Футболка", 30.0, 100, "L", "хлопок");
+        catalog += std::make_unique<ClothingProduct>(3002, "Куртка", 200.0, 20, "M", "кожа");
+    }
 
     int choise = 0;
 
@@ -190,7 +197,12 @@ int main() {
 
             switch (choise) {
             case 0:
-                std::cout << "Выход...\n";
+                try {
+                    FileManager::saveState("state.txt", catalog, cart);
+                    std::cout << "Автосохранение выполнено. Выход...\n";
+                } catch (const std::exception& e) {
+                    std::cout << "Ошибка автосохранения: " << e.what() << "\n";
+                }
                 break;
             case 1:
                 catalog += createProductFromInput();
@@ -270,10 +282,27 @@ int main() {
             case 22:
                 std::cout << catalog.findProduct(9999);
                 break;
+            case 23:
+                try {
+                    FileManager::saveState("state.txt", catalog, cart);
+                    std::cout << "Данные успешно сохранены в state.txt!\n";
+                } catch (const std::exception& e) {
+                    std::cout << "Ошибка сохранения: " << e.what() << "\n";
+                }
+                break;
+            case 24:
+                try {
+                    FileManager::generateReport("report.txt", catalog, cart);
+                    std::cout << "Отчет успешно создан в файле report.txt!\n";
+                } catch (const std::exception& e) {
+                    std::cout << "Ошибка создания отчета: " << e.what() << "\n";
+                }
+                break;
             default:
                 std::cout << "Неверный пункт меню\n";
                 break;
             }
+             
         }
         catch (const AlreadyInCartException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; }
         catch (const DuplicateItemException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 

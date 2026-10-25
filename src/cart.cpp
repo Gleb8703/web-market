@@ -37,9 +37,7 @@ Product* Cart::getProduct(std::size_t index) const {
 Cart& Cart::operator+=(Product* product) {
     if (!product) return *this;
     for (std::size_t i = 0; i < cartProducts.size(); ++i) {
-        if (*cartProducts.at(i) == *product) {
-            throw AlreadyInCartException();
-        }
+         
     }
     cartProducts.add(product);
     totalQuantity += product->getQuantity();

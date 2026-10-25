@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #include <string>
@@ -5,7 +6,7 @@
 #include <algorithm>
 #include "product.h"
 #include "input.h"
-
+#include "collection.h"
 class Product;
 class Catalog {
     Collection<std::unique_ptr<Product>> products;

@@ -6,7 +6,7 @@
 #include "bookProduct.h"
 #include "clothingProduct.h"
 #include "foodProduct.h"
-#include "exceptions/invalidData.h"
+#include "exceptions/invalidDataException.h"
 
 Product::Product(int newItemNo, std::string_view newName, double newPrice, int newQuantity)
     : itemNo(newItemNo), name(newName), price(newPrice), quantity(newQuantity) {

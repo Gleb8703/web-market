@@ -11,4 +11,6 @@ public:
     void printInfo() const override;
     double printDiscountPrices() const override;  
     std::string getSizeInfo() const;
+    std::string getSize() const { return size; }
+    std::string getMaterial() const { return material; }
 };
