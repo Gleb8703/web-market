@@ -94,7 +94,10 @@ bool FileManager::loadState(const std::string& filename, Catalog& catalog, Cart&
 }
 
 void FileManager::loadFood(std::ifstream& in, Catalog& catalog) {
-    int id, qty, exp, refr; 
+    int id;
+    int qty;
+    int exp;
+    int refr; 
     std::string name; 
     double price;
     
@@ -105,8 +108,11 @@ void FileManager::loadFood(std::ifstream& in, Catalog& catalog) {
 }
 
 void FileManager::loadBook(std::ifstream& in, Catalog& catalog) {
-    int id, qty, pages; 
-    std::string name, author; 
+    int id;
+    int qty;
+    int pages; 
+    std::string name; 
+    std::string author; 
     double price;
     
     if (!(in >> id >> std::quoted(name) >> price >> qty >> pages >> std::quoted(author))) {
@@ -116,8 +122,11 @@ void FileManager::loadBook(std::ifstream& in, Catalog& catalog) {
 }
 
 void FileManager::loadCloth(std::ifstream& in, Catalog& catalog) {
-    int id, qty; 
-    std::string name, size, material; 
+    int id;
+    int qty; 
+    std::string name; 
+    std::string size;
+    std::string material; 
     double price;
     
     if (!(in >> id >> std::quoted(name) >> price >> qty >> std::quoted(size) >> std::quoted(material))) {
@@ -126,7 +135,7 @@ void FileManager::loadCloth(std::ifstream& in, Catalog& catalog) {
     catalog += std::make_unique<ClothingProduct>(id, name, price, qty, size, material);
 }
 
-void FileManager::loadCartItem(std::ifstream& in, Catalog& catalog, Cart& cart) {
+void FileManager::loadCartItem(std::ifstream& in, const Catalog& catalog, Cart& cart) {
     int id;
     if (!(in >> id)) {
         throw FileException("Ошибка чтения данных CART");

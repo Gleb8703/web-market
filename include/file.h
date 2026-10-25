@@ -20,5 +20,5 @@ private:
     static void loadFood(std::ifstream& in, Catalog& catalog);
     static void loadBook(std::ifstream& in, Catalog& catalog);
     static void loadCloth(std::ifstream& in, Catalog& catalog);
-    static void loadCartItem(std::ifstream& in, Catalog& catalog, Cart& cart);
+    static void loadCartItem(std::ifstream& in, const Catalog& catalog, Cart& cart);
 };
