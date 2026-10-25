@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <sstream>
 #include "exceptions/fileException.h"
+#include <chrono>
 
 // ==================== СОХРАНЕНИЕ ====================
 
@@ -150,28 +151,25 @@ void FileManager::loadCartItem(std::ifstream& in, const Catalog& catalog, Cart& 
 
 
 void FileManager::logAction(const std::string& logFilename, const std::string& action) {
-    std::ofstream log(logFilename, std::ios::app); // Режим добавления
-    if (!log.is_open()) {
-        std::cerr << "Предупреждение: не удалось открыть лог-файл " << logFilename << "\n";
-        return;
-    }
+    std::ofstream log(logFilename, std::ios::app);
+    if (!log.is_open()) return;
 
-    std::time_t now = std::time(nullptr);
-    std::tm timeInfo;
+    auto now = std::chrono::system_clock::now();
     
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm timeInfo;
 #ifdef _WIN32
-    localtime_s(&timeInfo, &now);
+    localtime_s(&timeInfo, &now_c);
 #else
-    localtime_r(&now, &timeInfo);
+    localtime_r(&now_c, &timeInfo);
 #endif
-
     log << "[" << std::put_time(&timeInfo, "%Y-%m-%d %H:%M:%S") << "] " << action << "\n";
 }
 
 void FileManager::generateReport(const std::string& reportFilename, const Catalog& catalog, const Cart& cart) {
     std::ofstream report(reportFilename);
     if (!report.is_open()) {
-        throw std::runtime_error("Не удалось создать файл отчета: " + reportFilename);
+        throw FileException("Не удалось создать файл отчета: " + reportFilename);
     }
 
     report << "========================================\n";
@@ -180,7 +178,7 @@ void FileManager::generateReport(const std::string& reportFilename, const Catalo
 
     report << "--- КАТАЛОГ ТОВАРОВ (" << catalog.size() << " шт.) ---\n";
     for (std::size_t i = 0; i < catalog.size(); ++i) {
-        Product* p = catalog.getProduct(i);
+        const Product* p = catalog.getProduct(i);
         report << p->getItemNo() << " | " << p->getName() << " | " 
                << p->getPrice() << " byn | Остаток: " << p->getQuantity() << "\n";
     }
@@ -188,7 +186,7 @@ void FileManager::generateReport(const std::string& reportFilename, const Catalo
     report << "\n--- КОРЗИНА (" << cart.size() << " шт.) ---\n";
     if (cart.size() == 0) report << "Корзина пуста.\n";
     for (std::size_t i = 0; i < cart.size(); ++i) {
-        Product* p = cart.getProduct(i);
+        const Product* p = cart.getProduct(i);
         report << "В корзине: " << p->getName() << " (" << p->getPrice() << " byn)\n";
     }
 }
