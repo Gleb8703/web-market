@@ -175,6 +175,8 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 #endif
+    std::string logFile = "log.txt"; 
+    FileManager::logAction(logFile, "=== ПРОГРАММА ЗАПУЩЕНА ===");
     Catalog catalog;
     std::vector<std::unique_ptr<Product>> orders;
     Cart cart;
@@ -197,6 +199,7 @@ int main() {
 
             switch (choise) {
             case 0:
+                FileManager::logAction(logFile, "Пользователь завершил работу программы.");
                 try {
                     FileManager::saveState("state.txt", catalog, cart);
                     std::cout << "Автосохранение выполнено. Выход...\n";
@@ -206,6 +209,7 @@ int main() {
                 break;
             case 1:
                 catalog += createProductFromInput();
+                FileManager::logAction(logFile, "Добавлен новый товар в каталог.");
                 break;
             case 2:
                 catalog.printCatalog();
@@ -215,12 +219,14 @@ int main() {
                 break;
             case 4:
                 addToCartMenu(catalog, cart);
+                FileManager::logAction(logFile, "Товар добавлен в корзину.");
                 break;
             case 5:
                 printCart(cart);
                 break;
             case 6:
                 makeOrderMenu(cart);
+                FileManager::logAction(logFile, "Оформлен заказ из корзины.");
                 break;
             case 7:
                 std::cout << catalog.findProduct(readInt("Введите артикул"));
@@ -231,6 +237,7 @@ int main() {
                 break;
             case 9:
                 removeProductMenu(catalog, cart);
+                FileManager::logAction(logFile, "Товар удален из каталога.");
                 break;
             case 10:
                 catalog.printDiscountPrices();
@@ -284,11 +291,11 @@ int main() {
                 break;
             case 23:
                 try {
-                    FileManager::saveState("state.txt", catalog, cart);
-                    std::cout << "Данные успешно сохранены в state.txt!\n";
+                FileManager::saveState("state.txt", catalog, cart);
+                FileManager::logAction(logFile, "Ручное сохранение состояния системы.");
+                std::cout << "Данные успешно сохранены!\n";
                 } catch (const std::exception& e) {
-                    std::cout << "Ошибка сохранения: " << e.what() << "\n";
-                }
+                    std::cout << "Ошибка сохранения: " << e.what() << "\n"; }
                 break;
             case 24:
                 try {
@@ -305,10 +312,20 @@ int main() {
              
         }
         catch (const AlreadyInCartException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; }
-        catch (const DuplicateItemException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 
         catch (const InvalidProductDataException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 
-        catch (const NotEnoughStockException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; } 
         catch (const ProductNotFoundException& e) { std::cout <<"ОШИБКА " << e.what() << std::endl; }  
+        catch (const DuplicateItemException& e) {
+            std::cout << "\n[ОШИБКА КАТАЛОГА] " << e.what() << "\n";
+            FileManager::logAction(logFile, std::string("ОШИБКА: ") + e.what());
+        }
+        catch (const NotEnoughStockException& e) {
+            std::cout << "\n[ОШИБКА ЗАКАЗА] " << e.what() << "\n";
+            FileManager::logAction(logFile, std::string("ОШИБКА: ") + e.what());
+        }
+        catch (const std::exception& e) {
+            std::cout << "\n[СИСТЕМНАЯ ОШИБКА] " << e.what() << "\n";
+            FileManager::logAction(logFile, std::string("СИСТЕМНАЯ ОШИБКА: ") + e.what());
+        }
     } while (choise != 0);
 
     return 0;

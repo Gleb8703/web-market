@@ -1,19 +1,24 @@
 #pragma once
 #include <string>
+#include <fstream>
 #include "catalog.h"
 #include "cart.h"
 
 class FileManager {
 public:
-    // Сохранение состояния
     static void saveState(const std::string& filename, const Catalog& catalog, const Cart& cart);
-    
-    // Загрузка состояния (возвращает true, если успешно)
     static bool loadState(const std::string& filename, Catalog& catalog, Cart& cart);
-    
-    // Добавление записи в лог
-    static void logAction(const std::string& action);
-    
-    // Формирование текстового отчета
-    static void generateReport(const std::string& filename, const Catalog& catalog, const Cart& cart);
+    static void logAction(const std::string& logFilename, const std::string& action);
+    static void generateReport(const std::string& reportFilename, const Catalog& catalog, const Cart& cart);
+
+private:
+    static void saveFoods(std::ofstream& out, const Catalog& catalog);
+    static void saveBooks(std::ofstream& out, const Catalog& catalog);
+    static void saveClothes(std::ofstream& out, const Catalog& catalog);
+    static void saveCart(std::ofstream& out, const Cart& cart);
+
+    static void loadFood(std::ifstream& in, Catalog& catalog);
+    static void loadBook(std::ifstream& in, Catalog& catalog);
+    static void loadCloth(std::ifstream& in, Catalog& catalog);
+    static void loadCartItem(std::ifstream& in, Catalog& catalog, Cart& cart);
 };
