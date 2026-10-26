@@ -11,15 +11,12 @@
 #include "exceptions/fileException.h"
 #include <chrono>
 
-// ==================== СОХРАНЕНИЕ ====================
-
 void FileManager::saveState(const std::string& filename, const Catalog& catalog, const Cart& cart) {
     std::ofstream out(filename);
     if (!out.is_open()) {
         throw FileException(filename);
     }
 
-    // Вызываем специализированные методы
     saveFoods(out, catalog);
     saveBooks(out, catalog);
     saveClothes(out, catalog);
@@ -65,12 +62,10 @@ void FileManager::saveCart(std::ofstream& out, const Cart& cart) {
     }
 }
 
-// ==================== ЗАГРУЗКА ====================
-
 bool FileManager::loadState(const std::string& filename, Catalog& catalog, Cart& cart) {
     std::ifstream in(filename);
     if (!in.is_open()) {
-        return false; // Файла нет — начинаем с чистого листа
+        return false; 
     }
 
     std::string type;
