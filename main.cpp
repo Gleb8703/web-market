@@ -273,7 +273,7 @@ int main() {
                 cart += catalog.getProduct(1);
                 break;
             case 19:
-                catalog += std::make_unique<FoodProduct>(1001, "Молоко", 2.5, 50, 7, true);
+                catalog += std::make_unique<FoodProduct>(1004, "Молоко\n", 2.5, 50, 7, true);
                 break;
             case 20:
                 catalog += std::make_unique<FoodProduct>(1001, "Молоко", -2.5, 50, 7, true);
