@@ -21,6 +21,7 @@ public:
     std::size_t size() const { return products.size(); }
     bool empty() const { return products.empty(); }
     Product* getProduct(std::size_t index) const;
+    const Collection<std::unique_ptr<Product>>& getProducts() const { return products; }
     void checkExpiryDays() const;
     void printReadingTime() const;
     void printByIndex(std::size_t index) const;          // operator[]

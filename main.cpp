@@ -3,6 +3,10 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include <unordered_map>
+#include <set>
+#include <list>
+#include <iterator>
 #include "include/cart.h"
 #include "include/product.h"
 #include "include/input.h"
@@ -48,6 +52,14 @@ void menu() {
     std::cout << "-----------------Файлы------------------\n";
     std::cout << "23.Сохранить данные в файл\n";
     std::cout << "24.Сгенерировать текстовый отчет\n";
+    std::cout << "-----------------STL--------------------\n";
+    std::cout << "25.Быстрый поиск по артикулу (unordered_map)\n";
+    std::cout << "26.Показать уникальные типы товаров (set)\n";
+    std::cout << "27.Подсчитать товары дороже 50 руб (count_if)\n";
+    std::cout << "28.Найти самый дорогой товар (max_element)\n";
+    std::cout << "29.Найти товар, которого нет в наличии (find_if)\n";
+    std::cout << "30.Вывести цены со скидкой 10% (for_each)\n";
+    std::cout << "31.Вывести корзину как список (list)\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
@@ -158,7 +170,7 @@ std::unique_ptr<Product> createProductFromInput() {
 }
 void demonstrateCustomer(const Catalog& catalog) {
 
-    Customer ivan("Иванов Иван", "ivanov@mail.ru", "+375291112233");
+    Customer ivan("Иванов Иван", "ivanov@mail.ru", "+375291112233", 0);
 
     if (catalog.size() >= 1) ivan.viewProduct(catalog.getProduct(0));
     if (catalog.size() >= 2) ivan.viewProduct(catalog.getProduct(1));
@@ -170,6 +182,107 @@ void demonstrateCustomer(const Catalog& catalog) {
 
     std::cout << "==============================\n\n";
 }
+
+void demoUnorderedMap(const Catalog& catalog, int searchId) {
+    std::unordered_map<int, Product*> productIndex;
+    for (size_t i = 0; i < catalog.size(); ++i) {
+        productIndex[catalog.getProduct(i)->getItemNo()] = catalog.getProduct(i);
+    }
+    auto it = productIndex.find(searchId);
+    if (it != productIndex.end()) {
+        std::cout << "Найдено:\n";
+        it->second->printInfo();
+    } else {
+        std::cout << "Товар с таким артикулом не найден.\n";
+    }
+}
+
+void demoSet(const Catalog& catalog) {
+    std::set<std::string> uniqueTypes;
+    for (size_t i = 0; i < catalog.size(); ++i) {
+        uniqueTypes.insert(catalog.getProduct(i)->getType());
+    }
+    std::cout << "Уникальные типы товаров в магазине (set):\n";
+    for (const auto& type : uniqueTypes) {
+        std::cout << "- " << type << "\n";
+    }
+}
+
+void demoCountIf(const Catalog& catalog) {
+    auto countExpensive = std::count_if(catalog.getProducts().begin(), catalog.getProducts().end(),
+        [](const std::unique_ptr<Product>& p) { 
+            return p->getPrice() > 50.0; 
+        });
+    std::cout << "Количество товаров дороже 50 руб : " << countExpensive << "\n";
+}
+
+void demoMaxElement(const Catalog& catalog) {
+    if (catalog.empty()) {
+        std::cout << "Каталог пуст.\n";
+        return;
+    }
+    auto maxIt = std::max_element(catalog.getProducts().begin(), catalog.getProducts().end(),
+        [](const std::unique_ptr<Product>& a, const std::unique_ptr<Product>& b) {
+            return a->getPrice() < b->getPrice();
+        });
+    std::cout << "Самый дорогой товар :\n";
+    std::cout << (*maxIt)->getName() << " (" << (*maxIt)->getPrice() << " руб.)\n";
+}
+
+void demoFindIf(const Catalog& catalog) {
+    auto outOfStockIt = std::find_if(catalog.getProducts().begin(), catalog.getProducts().end(),
+        [](const std::unique_ptr<Product>& p) { 
+            return p->getQuantity() == 0; 
+        });
+    if (outOfStockIt != catalog.getProducts().end()) {
+        std::cout << "Первый товар, которого нет в наличии  :\n";
+        (*outOfStockIt)->printInfo();
+    } else {
+        std::cout << "Все товары в наличии!\n";
+    }
+}
+
+void demoForEach(const Catalog& catalog, double sale) {
+    std::cout << "Цены со скидкой:\n";
+    std::for_each(catalog.getProducts().begin(), catalog.getProducts().end(),
+        [sale](const std::unique_ptr<Product>& p) {
+            double newPrice = p->getPrice() * (1 - (sale/100));
+            std::cout << p->getName() << " со скидкой: " << newPrice << " руб.\n";
+        });
+}
+
+void demoList(const Catalog& catalog) {
+    std::cout << "Демонстрация контейнера list (Лист ожидания на товар):\n";
+    if (catalog.empty()) {
+        std::cout << "Каталог пуст.\n";
+        return;
+    }
+    Customer egor("Егоров Иван", "ivanov@mail.ru", "+375291112233", 0);
+    Customer matvey("Матвей Попеньке", "fsdg@mail.ru", "+37529333233", 0);
+    Customer negoida("Негойда Егор", "iikthf@mail.ru", "+375291772233", 1);
+
+    std::list<std::string> waitlist;
+    waitlist.push_back(egor.getName());
+    waitlist.push_back(matvey.getName());
+
+    std::cout << "Текущая очередь на товар:\n";
+    for (const auto& name : waitlist) {
+        std::cout << "- " << name << "\n";
+    }
+
+    waitlist.remove(egor.getName());
+    std::cout << "\nЕгоров отменил заказ. Очередь после удаления из середины:\n";
+    for (const auto& name : waitlist) {
+        std::cout << "- " << name << "\n";
+    }
+    if (negoida.getVIP())
+    waitlist.push_front(negoida.getName());
+    std::cout << "\nПришел VIP-клиент. Очередь после вставки в начало:\n";
+    for (const auto& name : waitlist) {
+        std::cout << "- " << name << "\n";
+    }
+}
+
 int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -294,6 +407,21 @@ int main() {
                 FileManager::generateReport("report.txt", catalog, cart);
                 std::cout << "Отчет успешно создан в файле report.txt!\n";
                 break;
+            case 25: {
+                int searchId = readInt("Введите артикул: "); 
+                demoUnorderedMap(catalog, searchId); 
+                break;
+            }    
+            case 26: demoSet(catalog); break;
+            case 27: demoCountIf(catalog); break;
+            case 28: demoMaxElement(catalog); break;
+            case 29: demoFindIf(catalog); break;
+            case 30: {
+                double sale = readDouble("Введите скидку в процентах: ");
+                demoForEach(catalog, sale);
+                break;
+            }
+            case 31: demoList(catalog); break;
             default:
                 std::cout << "Неверный пункт меню\n";
                 break;

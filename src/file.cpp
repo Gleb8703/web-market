@@ -131,7 +131,7 @@ void FileManager::loadCloth(std::ifstream& in, Catalog& catalog) {
     catalog += std::make_unique<ClothingProduct>(id, name, price, qty, size, material);
 }
 
-void FileManager::loadCartItem(std::ifstream& in, const Catalog& catalog, Cart& cart) {
+void FileManager::loadCartItem(std::ifstream& in, const Catalog& catalog, Cart& cart) { 
     int id;
     if (!(in >> id)) {
         throw FileException("Ошибка чтения данных CART");
@@ -174,7 +174,7 @@ void FileManager::generateReport(const std::string& reportFilename, const Catalo
     report << "--- КАТАЛОГ ТОВАРОВ (" << catalog.size() << " шт.) ---\n";
     for (std::size_t i = 0; i < catalog.size(); ++i) {
         const Product* p = catalog.getProduct(i);
-        report << p->getItemNo() << " | " << p->getName() << " | " 
+        report << p->getItemNo() << " | " << p->getName() << " | "
                << p->getPrice() << " byn | Остаток: " << p->getQuantity() << "\n";
     }
 
