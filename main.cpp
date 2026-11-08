@@ -198,7 +198,7 @@ void demoUnorderedMap(const Catalog& catalog, int searchId) {
 }
 
 void demoSet(const Catalog& catalog) {
-    std::set<std::string> uniqueTypes;
+    std::set<std::string, std::less<>> uniqueTypes;
     for (size_t i = 0; i < catalog.size(); ++i) {
         uniqueTypes.insert(catalog.getProduct(i)->getType());
     }
