@@ -275,11 +275,12 @@ void demoList(const Catalog& catalog) {
     for (const auto& name : waitlist) {
         std::cout << "- " << name << "\n";
     }
-    if (negoida.getVIP())
-    waitlist.push_front(negoida.getName());
-    std::cout << "\nПришел VIP-клиент. Очередь после вставки в начало:\n";
-    for (const auto& name : waitlist) {
-        std::cout << "- " << name << "\n";
+    if (negoida.getVIP()) {
+        waitlist.push_front(negoida.getName());
+        std::cout << "\nПришел VIP-клиент. Очередь после вставки в начало:\n";
+        for (const auto& name : waitlist) {
+            std::cout << "- " << name << "\n";
+        }
     }
 }
 
