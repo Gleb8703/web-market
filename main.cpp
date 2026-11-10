@@ -208,10 +208,10 @@ void demoSet(const Catalog& catalog) {
     }
 }
 
-void demoCountIf(const Catalog& catalog) {
+void demoCountIf(const Catalog& catalog, double min) {
     auto countExpensive = std::count_if(catalog.getProducts().begin(), catalog.getProducts().end(),
-        [](const std::unique_ptr<Product>& p) { 
-            return p->getPrice() > 50.0; 
+        [min](const std::unique_ptr<Product>& p) { 
+            return p->getPrice() > min; 
         });
     std::cout << "Количество товаров дороже 50 руб : " << countExpensive << "\n";
 }
@@ -414,7 +414,11 @@ int main() {
                 break;
             }    
             case 26: demoSet(catalog); break;
-            case 27: demoCountIf(catalog); break;
+            case 27: {
+                double minLimit = readDouble("Введите нинжний предел цены для подсчёта");
+                demoCountIf(catalog, minLimit); 
+                break;
+            }
             case 28: demoMaxElement(catalog); break;
             case 29: demoFindIf(catalog); break;
             case 30: {
