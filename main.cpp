@@ -58,8 +58,8 @@ void menu() {
     std::cout << "27.Подсчитать товары дороже 50 руб (count_if)\n";
     std::cout << "28.Найти самый дорогой товар (max_element)\n";
     std::cout << "29.Найти товар, которого нет в наличии (find_if)\n";
-    std::cout << "30.Вывести цены со скидкой 10% (for_each)\n";
-    std::cout << "31.Вывести корзину как список (list)\n";
+    std::cout << "30.Вывести цены со скидкой(for_each)\n";
+    std::cout << "31.Демонстрация очереди (list)\n";
 }
 
 void printAllProducts(const std::vector<std::unique_ptr<Product>>& products) {
